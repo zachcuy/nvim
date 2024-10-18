@@ -54,3 +54,26 @@ keymap.set("n", "<Leader>e", ":Oil<Return>", opts)
 
 -- delete all buffers
 keymap.set("n", "<Leader>ba", ":bufdo bd<Return>", { noremap = true, silent = true, desc = "Delete all buffers" })
+
+-- move buffers left/right
+keymap.del("n", "<Leader>bp")
+keymap.set(
+  "n",
+  "<Leader>bn",
+  ":BufferLineMoveNext<Return>",
+  { noremap = true, silent = true, desc = "Move buffer next" }
+)
+keymap.set(
+  "n",
+  "<Leader>bp",
+  ":BufferLineMovePrev<Return>",
+  { noremap = true, silent = true, desc = "Move buffer prev" }
+)
+
+-- grug-far (search and replace)
+keymap.set(
+  "n",
+  "<leader>r",
+  [[:lua require('grug-far').open({ prefills = { paths = vim.fn.expand("%") } })<CR>]],
+  { noremap = true, silent = true, desc = "Search and Replace Current File" }
+)
