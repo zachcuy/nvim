@@ -6,6 +6,7 @@ return {
         c = { "clangd" },
         cpp = { "clangd" },
         java = { "clangd" },
+        astro = { "prettier" },
       },
     },
   },
