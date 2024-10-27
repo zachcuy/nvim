@@ -16,12 +16,6 @@ keymap.set("n", "<C-a>", "gg<S-v>G")
 keymap.set("n", "ss", ":split<Return>", opts)
 keymap.set("n", "sv", ":vsplit<Return>", opts)
 
--- move window
-keymap.set("n", "sh", "<C-w>h", opts)
-keymap.set("n", "sk", "<C-w>k", opts)
-keymap.set("n", "sj", "<C-w>j", opts)
-keymap.set("n", "sl", "<C-w>l", opts)
-
 -- resize window
 keymap.set("n", "<C-S-h>", "2<C-w><", opts)
 keymap.set("n", "<C-S-l>", "2<C-w>>", opts)
@@ -77,3 +71,7 @@ keymap.set(
   [[:lua require('grug-far').open({ prefills = { paths = vim.fn.expand("%") } })<CR>]],
   { noremap = true, silent = true, desc = "Search and Replace Current File" }
 )
+
+-- Disable the default 's' key behavior (and capital S for consistency)
+vim.keymap.set({ "n", "x", "o" }, "s", "", { noremap = true })
+vim.keymap.set({ "n", "x", "o" }, "S", "", { noremap = true })
