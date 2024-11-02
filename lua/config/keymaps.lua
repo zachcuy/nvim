@@ -13,7 +13,7 @@ keymap.set("n", "-", "<C-x>")
 keymap.set("n", "<C-a>", "gg<S-v>G")
 
 -- split window
-keymap.set("n", "ss", ":split<Return>", opts)
+-- keymap.set("n", "ss", ":split<Return>", opts)
 keymap.set("n", "sv", ":vsplit<Return>", opts)
 
 -- resize window
@@ -73,5 +73,8 @@ keymap.set(
 )
 
 -- Disable the default 's' key behavior (and capital S for consistency)
-vim.keymap.set({ "n", "x", "o" }, "s", "", { noremap = true })
-vim.keymap.set({ "n", "x", "o" }, "S", "", { noremap = true })
+-- vim.keymap.set({ "n", "x", "o" }, "s", "", { noremap = true })
+-- vim.keymap.set({ "n", "x", "o" }, "S", "", { noremap = true })
+
+-- disable macro recording
+vim.keymap.set({ "n", "v" }, "q", "", { noremap = true })
