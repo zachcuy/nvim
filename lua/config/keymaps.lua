@@ -72,9 +72,11 @@ keymap.set(
   { noremap = true, silent = true, desc = "Search and Replace Current File" }
 )
 
--- Disable the default 's' key behavior (and capital S for consistency)
+-- disable the default 's' key behavior (and capital S for consistency)
 -- vim.keymap.set({ "n", "x", "o" }, "s", "", { noremap = true })
 -- vim.keymap.set({ "n", "x", "o" }, "S", "", { noremap = true })
+
+-- disable default 'S' key since it's equivalent to doing 'cc' and clashes with nvim-surround
 vim.keymap.set({ "n" }, "S", "", { noremap = true })
 
 -- disable macro recording
