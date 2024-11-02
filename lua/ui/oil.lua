@@ -2,6 +2,7 @@ return {
   {
     "stevearc/oil.nvim",
     -- Optional dependencies
+    dependencies = { { "echasnovski/mini.icons", opts = {} } },
     -- dependencies = { "nvim-tree/nvim-web-devicons" },
     -- config
     config = function()
