@@ -75,6 +75,7 @@ keymap.set(
 -- Disable the default 's' key behavior (and capital S for consistency)
 -- vim.keymap.set({ "n", "x", "o" }, "s", "", { noremap = true })
 -- vim.keymap.set({ "n", "x", "o" }, "S", "", { noremap = true })
+vim.keymap.set({ "n" }, "S", "", { noremap = true })
 
 -- disable macro recording
 vim.keymap.set({ "n", "v" }, "q", "", { noremap = true })
