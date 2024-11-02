@@ -10,5 +10,6 @@ return {
   keys = {
     -- { "z", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
     -- { "Z", mode = { "n", "x", "o" }, function() require("flash").jump({ reverse = true }) end, desc = "Flash" },
+    {"S", false},
   },
 }
