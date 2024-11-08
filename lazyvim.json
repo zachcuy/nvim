@@ -1,6 +1,5 @@
 {
   "extras": [
-    "lazyvim.plugins.extras.editor.aerial",
     "lazyvim.plugins.extras.lang.angular",
     "lazyvim.plugins.extras.lang.clangd",
     "lazyvim.plugins.extras.lang.json",
