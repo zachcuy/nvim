@@ -7,7 +7,7 @@ return {
         c = { "clangd" },
         cpp = { "clangd" },
         html = { "prettier" },
-        java = { "clangd" },
+        java = { "prettier" },
         javascript = { "prettier" },
         lua = { "stylua" },
         typescript = { "prettier" },
