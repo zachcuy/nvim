@@ -11,6 +11,8 @@ return {
         javascript = { "prettier" },
         lua = { "stylua" },
         typescript = { "prettier" },
+        xml = { "xmlformatter" },
+        rust = { "rustfmt" },
       },
     },
   },
