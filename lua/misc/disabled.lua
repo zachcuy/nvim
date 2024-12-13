@@ -9,10 +9,10 @@ return {
     enabled = false,
   },
 
-  {
-    "nvimdev/dashboard-nvim",
-    enabled = false,
-  },
+  -- {
+  --   "nvimdev/dashboard-nvim",
+  --   enabled = false,
+  -- },
 
   -- {
   --   "folke/persistence.nvim",

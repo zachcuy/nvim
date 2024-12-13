@@ -28,7 +28,7 @@ require("lazy").setup({
   },
   install = { colorscheme = { "catppuccin" } },
   checker = {
-    enabled = true, -- check for plugin updates periodically
+    enabled = false, -- check for plugin updates periodically
     notify = false, -- notify on update
   },
   performance = {
