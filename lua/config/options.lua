@@ -104,3 +104,6 @@ vim.opt.splitright = true
 
 -- Open new horizontal splits below the current window
 vim.opt.splitbelow = true
+
+-- Disable snacks.nvim animation
+vim.g.snacks_animate = false
