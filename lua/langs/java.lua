@@ -13,7 +13,7 @@ return {
     ensure_installed = { "java" },
   } },
   {
-    "zachcuy/nvim-java",
+    "nvim-java/nvim-java",
     dependencies = {
       {
         "neovim/nvim-lspconfig",
