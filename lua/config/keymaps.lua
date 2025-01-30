@@ -68,7 +68,7 @@ keymap.set(
 keymap.set(
   "n",
   "<leader>r",
-  [[:lua require('grug-far').open({ prefills = { paths = vim.fn.expand("%") } })<CR>]],
+  [[:lua require('grug-far').open({ prefills = { paths = vim.fn.expand("%"), flags = '-F' } })<CR>]],
   { noremap = true, silent = true, desc = "Search and Replace Current File" }
 )
 
