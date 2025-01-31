@@ -27,8 +27,12 @@ return {
             jdtls = function()
               require("java").setup({
                 -- Disable java_test and java_debug_adapter
-                java_test = { enable = false },
+                java_test = { enable = false, version = "0.43.0" },
                 java_debug_adapter = { enable = false },
+                spring_boot_tools = {
+                  enable = true,
+                  version = "1.59.0",
+                },
               })
             end,
           },
