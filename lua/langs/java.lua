@@ -31,7 +31,6 @@ return {
                 java_debug_adapter = { enable = false },
                 spring_boot_tools = {
                   enable = true,
-                  version = "1.59.0",
                 },
               })
             end,
