@@ -33,9 +33,6 @@ vim.g.netrw_winsize = 25
 -- Set line numbers
 vim.opt.nu = true
 
--- Set relative line numbers
-vim.opt.relativenumber = true
-
 -- Set tab width to 4 spaces
 vim.opt.tabstop = 4
 
