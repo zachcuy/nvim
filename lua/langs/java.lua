@@ -26,7 +26,9 @@ return {
           setup = {
             jdtls = function()
               require("java").setup({
-                -- your nvim-java configuration goes here
+                -- Disable java_test and java_debug_adapter
+                java_test = { enable = false },
+                java_debug_adapter = { enable = false },
               })
             end,
           },
