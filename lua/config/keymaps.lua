@@ -51,6 +51,7 @@ keymap.set("n", "<Leader>ba", ":bufdo bd<Return>", { noremap = true, silent = tr
 
 -- move buffers left/right
 keymap.del("n", "<Leader>bp")
+keymap.del("n", "<Leader>bP")
 keymap.set(
   "n",
   "<Leader>bn",
