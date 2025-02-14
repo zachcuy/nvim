@@ -82,3 +82,6 @@ vim.keymap.set({ "n" }, "S", "", { noremap = true })
 
 -- disable macro recording
 vim.keymap.set({ "n", "v" }, "q", "", { noremap = true })
+
+-- https://vonheikemen.github.io/devlog/tools/how-to-survive-without-multiple-cursors-in-vim/
+keymap.set("n", "<leader>j", "*``cgn", { noremap = true, silent = true })
