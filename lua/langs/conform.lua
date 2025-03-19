@@ -11,7 +11,7 @@ return {
         javascript = { "prettier" },
         lua = { "stylua" },
         typescript = { "prettier" },
-        rust = { "rustfmt" },
+        rust = { "rust-analyzer" },
       },
     },
   },
