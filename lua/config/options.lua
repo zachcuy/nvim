@@ -106,6 +106,7 @@ vim.opt.splitbelow = true
 vim.g.snacks_animate = false
 
 -- Added lsp/linter/formatter source for diagnostics
+-- https://www.reddit.com/r/neovim/comments/qbhaml/show_diagnostic_source_in_floating_window/
 -- vim.diagnostic.config({
 --   underline = true,
 --   signs = true,
