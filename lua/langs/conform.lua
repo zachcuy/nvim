@@ -12,6 +12,7 @@ return {
         lua = { "stylua" },
         typescript = { "prettier" },
         rust = { "rust-analyzer" },
+        markdown = { "prettierd" },
       },
     },
   },
