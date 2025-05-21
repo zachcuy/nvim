@@ -87,3 +87,6 @@ vim.keymap.set({ "n", "v" }, "q", "", { noremap = true })
 -- use . to replace the next match
 -- use n to skip current match and move onto next
 keymap.set("n", "<leader>j", "*``cgn", { noremap = true, silent = true })
+
+-- keymap to disable/pause lsp
+keymap.set("n", "<leader>cp", ":LspStop<Return>", { noremap = true, silent = true, desc = "Disable LSP" })
