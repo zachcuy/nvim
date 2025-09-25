@@ -8,5 +8,12 @@ return {
       end,
       desc = "Grep (cwd)",
     },
+    {
+      "<leader><space>",
+      function()
+        require("fzf-lua").files({ cwd = vim.fn.getcwd() })
+      end,
+      desc = "Find Files (cwd)",
+    },
   },
 }
