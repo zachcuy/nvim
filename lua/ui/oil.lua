@@ -5,7 +5,7 @@ return {
     ---@type oil.SetupOpts
 
     -- optional dependencies
-    dependencies = { { "echasnovski/mini.icons", opts = {} } },
+    dependencies = { { "nvim-mini/mini.icons", opts = {} } },
 
     -- config
     config = function()

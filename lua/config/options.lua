@@ -3,7 +3,7 @@ vim.g.python3_host_prog = "/usr/bin/python3"
 vim.g.loaded_perl_provider = 0
 
 -- Disable relative line numbers
-vim.opt.relativenumber = true
+vim.opt.relativenumber = false
 
 -- Ensure absolute line numbers are enabled
 vim.opt.number = true
@@ -40,7 +40,7 @@ vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 
 -- Use actual tabs (not spaces)
-vim.opt.expandtab = false
+vim.opt.expandtab = true
 
 -- Set the width for auto-indent to the same as tabstop
 vim.opt.shiftwidth = 0
@@ -91,7 +91,7 @@ vim.opt.autoread = true
 -- vim.opt.colorcolumn = "120"
 
 -- Set options for session saving
-vim.opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
+vim.opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp" }
 
 -- Set spell check language to English
 vim.opt.spelllang = { "en" }
