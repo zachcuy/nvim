@@ -4,8 +4,8 @@ return {
     opts = {
       formatters_by_ft = {
         astro = { "prettierd", "prettier" },
-        c = { "clangd" },
-        cpp = { "clangd" },
+        c = { "clang_format" },
+        cpp = { "clang_format" },
         html = { "prettierd", "prettier" },
         java = { "prettierd", "prettier" },
         javascript = { "prettierd", "prettier" },
