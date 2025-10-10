@@ -11,9 +11,14 @@ return {
         javascript = { "prettierd", "prettier" },
         lua = { "stylua" },
         typescript = { "prettierd", "prettier" },
-        rust = { "rust-analyzer" },
+        rust = { "rustfmt" },
         markdown = { "prettierd", "prettier" },
         css = { "prettierd", "prettier" },
+        typescriptreact = { "prettierd", "prettier" }, -- Added TSX support
+        javascriptreact = { "prettierd", "prettier" }, -- Added JSX support
+        scss = { "prettierd", "prettier" }, -- Added SCSS
+        json = { "prettierd", "prettier" }, -- Added JSON
+        yaml = { "prettierd", "prettier" }, -- Added YAML
       },
     },
   },
