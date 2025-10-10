@@ -52,7 +52,12 @@ vim.opt.smartindent = true
 vim.opt.completeopt = "menu,menuone,noselect"
 
 -- Disable line wrapping
-vim.opt.wrap = false
+-- vim.opt.wrap = false
+
+-- Enable line wrapping and changing line/break indent behavior
+vim.opt.wrap = true
+vim.opt.linebreak = true
+vim.opt.breakindent = true
 
 -- Disable swap file creation
 vim.opt.swapfile = false
