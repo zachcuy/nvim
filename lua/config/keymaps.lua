@@ -94,18 +94,22 @@ keymap.set("n", "<leader>cp", ":LspStop<Return>", { noremap = true, silent = tru
 -- custom behavior for dw:
 -- dw at the end of the line (after the comma) will delete to the end of that line only
 -- dw in the middle of words works as normal
-vim.keymap.set("n", "dw", function()
-  local cursor_line = vim.fn.line(".")
-  local save_cursor = vim.fn.getcurpos()
+-- vim.keymap.set("n", "dw", function()
+--   local cursor_line = vim.fn.line(".")
+--   local save_cursor = vim.fn.getcurpos()
+--
+--   vim.cmd("normal! w")
+--   local new_line = vim.fn.line(".")
+--
+--   vim.fn.setpos(".", save_cursor)
+--
+--   if new_line ~= cursor_line then
+--     vim.cmd("normal! d$")
+--   else
+--     vim.cmd("normal! dw")
+--   end
+-- end, { desc = "Delete word (stop at line end)" })
 
-  vim.cmd("normal! w")
-  local new_line = vim.fn.line(".")
-
-  vim.fn.setpos(".", save_cursor)
-
-  if new_line ~= cursor_line then
-    vim.cmd("normal! d$")
-  else
-    vim.cmd("normal! dw")
-  end
-end, { desc = "Delete word (stop at line end)" })
+-- custom behavior for cw
+-- vim.keymap.set("n", "cw", "ciw", { desc = "Change inner word" })
+-- vim.keymap.set("n", "dw", "diw", { desc = "Delete inner word" })
