@@ -113,3 +113,7 @@ keymap.set("n", "<leader>cp", ":LspStop<Return>", { noremap = true, silent = tru
 -- custom behavior for cw
 -- vim.keymap.set("n", "cw", "ciw", { desc = "Change inner word" })
 -- vim.keymap.set("n", "dw", "diw", { desc = "Delete inner word" })
+
+-- vim.keymap.set("n", "cw", "c<cmd>lua require('spider').motion('e')<CR>")
+-- vim.keymap.set("n", "dw", "c<cmd>lua require('spider').motion('e')<CR>")
+-- vim.keymap.set("n", "yw", "c<cmd>lua require('spider').motion('e')<CR>")

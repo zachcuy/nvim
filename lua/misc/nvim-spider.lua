@@ -3,6 +3,7 @@ return {
     "chrisgrieser/nvim-spider",
     opts = {
       skipInsignificantPunctuation = false,
+      consistentOperatorPending = true,
     },
     keys = {
       {
