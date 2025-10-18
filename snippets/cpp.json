@@ -1,0 +1,28 @@
+{
+  "Class with closing comment": {
+    "prefix": "[snippet] class",
+    "body": [
+      "class ${1:ClassName}",
+      "{",
+      "public:",
+      "",
+      "private:",
+      "};  // class ${1:ClassName}"
+    ],
+    "description": "Class definition with closing comment"
+  },
+  "Full class structure": {
+    "prefix": "[snippet] classfull",
+    "body": [
+      "class ${1:ClassName}",
+      "{",
+      "public:",
+      "    ${2:// Public members}",
+      "",
+      "private:",
+      "    ${0:// Private members}",
+      "};  // class ${1:ClassName}"
+    ],
+    "description": "Full class with public/private sections"
+  }
+}
