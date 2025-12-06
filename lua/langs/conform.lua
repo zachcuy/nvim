@@ -7,7 +7,7 @@ return {
         c = { "clang_format" },
         cpp = { "clang_format" },
         html = { "prettierd", "prettier" },
-        java = { "prettierd", "prettier" },
+        java = { "prettier" },
         javascript = { "prettierd", "prettier" },
         lua = { "stylua" },
         typescript = { "prettierd", "prettier" },

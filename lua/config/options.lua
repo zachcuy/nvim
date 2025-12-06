@@ -109,3 +109,9 @@ vim.opt.splitbelow = true
 
 -- Disable snacks.nvim animation
 vim.g.snacks_animate = false
+
+-- Disable diagnostics by default
+vim.diagnostic.enable(false)
+
+-- Disable autoformat by default
+vim.g.autoformat = false
