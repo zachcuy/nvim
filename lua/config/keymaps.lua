@@ -90,3 +90,6 @@ keymap.set("n", "<leader>j", "*``cgn", { noremap = true, silent = true })
 
 -- keymap to disable/pause lsp
 keymap.set("n", "<leader>cp", ":LspStop<Return>", { noremap = true, silent = true, desc = "Disable LSP" })
+
+vim.keymap.del("n", "<leader>uz")
+vim.keymap.del("n", "<leader>uZ")
