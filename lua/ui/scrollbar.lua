@@ -12,8 +12,8 @@ return {
 
     require("scrollbar").setup({
       show_in_active_only = true,
-      hide_if_all_visible = true,
-      throttle_ms = 100,
+      hide_if_all_visible = false,
+      throttle_ms = 50,
 
       -- Custom colors that match Catppuccin
       handle = {
@@ -55,7 +55,7 @@ return {
         },
         GitAdd = {
           text = "│",
-          priority = 7,
+          priority = 3,
           gui = nil,
           color = nil,
           cterm = nil,
@@ -64,7 +64,7 @@ return {
         },
         GitChange = {
           text = "│",
-          priority = 7,
+          priority = 3,
           gui = nil,
           color = nil,
           cterm = nil,
@@ -73,7 +73,7 @@ return {
         },
         GitDelete = {
           text = "▁",
-          priority = 7,
+          priority = 3,
           gui = nil,
           color = nil,
           cterm = nil,
