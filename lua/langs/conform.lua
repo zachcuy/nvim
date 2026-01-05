@@ -12,7 +12,7 @@ return {
         lua = { "stylua" },
         typescript = { "prettierd", "prettier" },
         rust = { "rustfmt" },
-        markdown = { "prettierd", "prettier" },
+        -- markdown = { "prettierd", "prettier" },
         css = { "prettierd", "prettier" },
         typescriptreact = { "prettierd", "prettier" }, -- Added TSX support
         javascriptreact = { "prettierd", "prettier" }, -- Added JSX support
