@@ -12,6 +12,10 @@ return {
       local oil = require("oil")
       oil.setup({
         delete_to_trash = true,
+        view_options = {
+          show_hidden = true,
+          natural_order = true,
+        },
         keymaps = {
           -- change ctrl + s keymap to save changes
           ["<C-s>"] = {
@@ -49,9 +53,6 @@ return {
               end
             end,
             desc = "oil: Search in directory",
-          },
-          view_options = {
-            show_hidden = true,
           },
         },
       })
