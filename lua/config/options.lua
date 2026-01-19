@@ -17,6 +17,27 @@ vim.opt.iskeyword:append("-")
 -- Disable GUI cursor shaping (e.g., blinking, color changes)
 vim.opt.guicursor = ""
 
+-- Define highlight groups for cursor colors
+vim.api.nvim_set_hl(0, "NormalCursor", { fg = "#1e1e2e", bg = "#ffffff" })
+vim.api.nvim_set_hl(0, "InsertCursor", { fg = "#1e1e2e", bg = "#ffd400" })
+vim.api.nvim_set_hl(0, "VisualCursor", { fg = "#1e1e2e", bg = "#ffd400" })
+vim.api.nvim_set_hl(0, "ReplaceCursor", { fg = "#1e1e2e", bg = "#ffd400" })
+vim.api.nvim_set_hl(0, "CommandCursor", { fg = "#1e1e2e", bg = "#ffd400" })
+
+-- Configure guicursor
+vim.opt.guicursor = {
+  "n-v-c-sm:block-NormalCursor/lCursor",
+
+  -- Insert mode: blinking block cursor
+  "i-ci-ve:block-InsertCursor/lCursor-blinkwait700-blinkon400-blinkoff250",
+
+  -- Replace mode: blinking block cursor
+  "r-cr:block-ReplaceCursor/lCursor-blinkwait700-blinkon400-blinkoff250",
+
+  -- Command mode: blinking block cursor
+  "o:block-CommandCursor/lCursor-blinkwait700-blinkon400-blinkoff250",
+}
+
 -- Disable netrw plugin
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -78,7 +99,7 @@ vim.opt.cursorline = true
 vim.opt.termguicolors = true
 
 -- Keep 8 lines visible above/below the cursor
-vim.opt.scrolloff = 8
+vim.opt.scrolloff = 3
 
 -- Always show the sign column
 vim.opt.signcolumn = "yes"
