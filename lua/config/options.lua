@@ -3,7 +3,7 @@ vim.g.python3_host_prog = "/usr/bin/python3"
 vim.g.loaded_perl_provider = 0
 
 -- Disable relative line numbers
-vim.opt.relativenumber = false
+vim.opt.relativenumber = true
 
 -- Ensure absolute line numbers are enabled
 vim.opt.number = true
