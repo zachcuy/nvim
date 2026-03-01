@@ -10,8 +10,52 @@ return {
     -- config
     config = function()
       local oil = require("oil")
+
+      -- Register a custom column to show the file type (e.g., markdown, c++)
+      require("oil.columns").register("filetype", {
+        render = function(entry)
+          local name = entry[require("oil.constants").FIELD_NAME] or ""
+          local type = entry[require("oil.constants").FIELD_TYPE]
+          if type == "directory" then
+            return "dir"
+          elseif type == "link" then
+            return "link"
+          end
+
+          -- Try to detect Neovim filetype, fallback to file extension
+          local ft = vim.filetype.match({ filename = name })
+          if not ft then
+            local ext = name:match("%.([^.]+)$")
+            ft = ext or "file"
+          end
+
+          -- Custom overrides for specific extensions/filetypes
+          local overrides = {
+            cpp = "c++",
+            md = "markdown",
+            js = "javascript",
+            ts = "typescript",
+            py = "python",
+            rs = "rust",
+            sh = "bash"
+          }
+          return overrides[ft] or ft
+        end,
+        parse = function(line)
+          return line:match("^(%S+)%s+(.*)$")
+        end
+      })
+
       oil.setup({
+        -- Add the custom filetype column and mtime for last modified
+        columns = {
+          "icon",
+          { "filetype", highlight = "Comment" },
+          -- { "size", highlight = "String" }, -- Optional: un-comment to show file size
+          { "mtime", highlight = "Number" },
+        },
         delete_to_trash = true,
+
         view_options = {
           show_hidden = true,
           natural_order = true,
