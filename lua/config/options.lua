@@ -76,7 +76,7 @@ vim.opt.completeopt = "menu,menuone,noselect"
 -- vim.opt.wrap = false
 
 -- Enable line wrapping and changing line/break indent behavior
-vim.opt.wrap = true
+vim.opt.wrap = false
 vim.opt.linebreak = true
 vim.opt.breakindent = true
 
