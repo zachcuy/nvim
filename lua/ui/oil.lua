@@ -98,6 +98,22 @@ return {
             end,
             desc = "oil: Search in directory",
           },
+
+          -- <leader>fo → open the directory oil is currently showing in Finder
+          ["<leader>fo"] = {
+            desc = "Open current directory in Finder",
+            callback = function()
+              local dir = require("oil").get_current_dir()
+
+              if not dir then
+                vim.notify("oil: could not resolve current directory", vim.log.levels.WARN)
+                return
+              end
+
+              vim.fn.jobstart({ "open", dir }, { detach = true })
+              vim.notify("Opened in Finder: " .. dir, vim.log.levels.INFO)
+            end,
+          },
         },
       })
     end,
