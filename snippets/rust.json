@@ -1,0 +1,30 @@
+{
+  "Debug print": {
+    "prefix": "[snippet] dbg",
+    "body": [
+      "println!(\"{:?}\", ${1:expr});"
+    ],
+    "description": "println! with {:?} debug format"
+  },
+  "Debug print pretty": {
+    "prefix": "[snippet] dbgf",
+    "body": [
+      "println!(\"{:#?}\", ${1:expr});"
+    ],
+    "description": "println! with {:#?} pretty debug format"
+  },
+  "Debug print labeled": {
+    "prefix": "[snippet] dbgl",
+    "body": [
+      "println!(\"${1:label}: {:?}\", ${2:expr});"
+    ],
+    "description": "println! with label and {:?} debug format"
+  },
+  "Eprintln debug": {
+    "prefix": "[snippet] edbg",
+    "body": [
+      "eprintln!(\"{:?}\", ${1:expr});"
+    ],
+    "description": "eprintln! with {:?} debug format"
+  }
+}
