@@ -92,6 +92,9 @@ vim.opt.undofile = true
 -- Ignore case in search patterns
 vim.opt.ignorecase = true
 
+-- Keep results highlighted after searching
+vim.opt.hlsearch = true
+
 -- Highlight the current line
 vim.opt.cursorline = true
 
