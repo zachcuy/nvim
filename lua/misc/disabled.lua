@@ -1,7 +1,7 @@
 return {
   {
-    "folke/tokyonight.nvim",
-    enabled = false,
+    -- "folke/tokyonight.nvim",
+    -- enabled = false,
   },
 
   {
