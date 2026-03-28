@@ -13,6 +13,9 @@ return {
         -- mode = "tabs",
         show_buffer_close_icons = false,
         show_close_icon = false,
+        diagnostics = false,
+        max_name_length = 12,
+        show_buffer_icons = false,
       },
       highlights = {
         buffer_selected = {
