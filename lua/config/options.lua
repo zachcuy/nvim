@@ -139,3 +139,6 @@ vim.diagnostic.enable(true)
 
 -- Disable autoformat by default
 vim.g.autoformat = false
+
+-- Disable markdown auto close (markdown-preview)
+vim.g.mkdp_auto_close = 0
