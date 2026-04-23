@@ -28,6 +28,8 @@ Source: `lua/config/keymaps.lua`
 | `<leader>r` | n | Grug-far search & replace in current file (fixed-string, case-insensitive) |
 | `S` | n | Disabled (avoids nvim-surround clash) |
 | `q` | n, v | Disabled (no macro recording) |
+| `<leader>yp` | n | Yank path relative to cwd |
+| `<leader>yP` | n | Yank path relative to home |
 | `<leader>j` | n | `*``cgn` — start replacing word under cursor, repeat with `.` |
 | `<leader>cp` | n | Stop LSP |
 
