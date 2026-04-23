@@ -88,6 +88,20 @@ vim.keymap.set({ "n", "v" }, "q", "", { noremap = true })
 -- use n to skip current match and move onto next
 keymap.set("n", "<leader>j", "*``cgn", { noremap = true, silent = true })
 
+-- yank file paths
+keymap.set("n", "<leader>yp", function()
+  vim.fn.setreg("+", vim.fn.expand("%:."))
+end, { noremap = true, silent = true, desc = "Yank path (relative to cwd)" })
+keymap.set("n", "<leader>yP", function()
+  vim.fn.setreg("+", vim.fn.expand("%:~"))
+end, { noremap = true, silent = true, desc = "Yank path (relative to home)" })
+-- keymap.set("n", "<leader>yf", function()
+--   vim.fn.setreg("+", vim.fn.expand("%:p"))
+-- end, { noremap = true, silent = true, desc = "Yank path (absolute)" })
+-- keymap.set("n", "<leader>yn", function()
+--   vim.fn.setreg("+", vim.fn.expand("%:t"))
+-- end, { noremap = true, silent = true, desc = "Yank filename" })
+
 -- keymap to disable/pause lsp
 keymap.set("n", "<leader>cp", ":LspStop<Return>", { noremap = true, silent = true, desc = "Disable LSP" })
 
