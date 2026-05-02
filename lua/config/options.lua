@@ -96,7 +96,7 @@ vim.opt.ignorecase = true
 vim.opt.hlsearch = true
 
 -- Highlight the current line
-vim.opt.cursorline = true
+vim.opt.cursorline = false
 
 -- Enable 24-bit RGB color in the terminal
 vim.opt.termguicolors = true
