@@ -72,10 +72,7 @@ vim.opt.smartindent = true
 -- Set options for code completion
 vim.opt.completeopt = "menu,menuone,noselect"
 
--- Disable line wrapping
--- vim.opt.wrap = false
-
--- Enable line wrapping and changing line/break indent behavior
+-- Disable line wrapping and changing line/break indent behavior
 vim.opt.wrap = false
 vim.opt.linebreak = true
 vim.opt.breakindent = true
