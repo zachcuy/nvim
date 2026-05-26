@@ -15,3 +15,19 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.wrap = false
   end
 })
+
+-- Auto-close block comments in C/C++: typing /* inserts /* | */
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "c", "cpp" },
+  callback = function()
+    local left = vim.api.nvim_replace_termcodes("<Left>", true, false, true)
+    vim.keymap.set("i", "*", function()
+      local col = vim.fn.col(".")
+      local line = vim.fn.getline(".")
+      if line:sub(col - 1, col - 1) == "/" then
+        return "*  */" .. left .. left .. left
+      end
+      return "*"
+    end, { expr = true, buffer = true })
+  end,
+})
