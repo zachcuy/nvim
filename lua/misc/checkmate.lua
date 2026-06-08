@@ -5,6 +5,9 @@ return {
     files = { "*.md" },
     enter_insert_after_new = false,
     log = {},
+    smart_toggle = {
+      enabled = false,
+    },
     keys = {
       ["<leader>tt"] = {
         rhs = "<cmd>Checkmate toggle<CR>",
@@ -46,11 +49,6 @@ return {
         desc = "Remove all metadata from a todo item",
         modes = { "n", "v" },
       },
-      ["<leader>ta"] = {
-        rhs = "<cmd>Checkmate archive<CR>",
-        desc = "Archive checked/completed todo items (move to bottom section)",
-        modes = { "n" },
-      },
       ["<leader>tF"] = {
         rhs = "<cmd>Checkmate select_todo<CR>",
         desc = "Open a picker to select a todo from the current buffer",
@@ -61,69 +59,66 @@ return {
         desc = "Update the value of a metadata tag under the cursor",
         modes = { "n" },
       },
-      ["<leader>t]"] = {
-        rhs = "<cmd>Checkmate metadata jump_next<CR>",
-        desc = "Move cursor to next metadata tag",
-        modes = { "n" },
+
+      -- Custom states
+      ["<leader>tx"] = {
+        rhs = "<cmd>Checkmate toggle cancelled<CR>",
+        desc = "Set todo: cancelled",
+        modes = { "n", "v" },
       },
-      ["<leader>t["] = {
-        rhs = "<cmd>Checkmate metadata jump_previous<CR>",
-        desc = "Move cursor to previous metadata tag",
-        modes = { "n" },
+      ["<leader>th"] = {
+        rhs = "<cmd>Checkmate toggle on_hold<CR>",
+        desc = "Set todo: on hold",
+        modes = { "n", "v" },
       },
+    },
+    todo_states = {
+      -- Built-in states (cannot change markdown or type)
+      -- unchecked = { marker = "□" },
+      -- checked = { marker = "✔" },
+
+      -- Custom states
+      cancelled = {
+        marker = "✗",
+        markdown = "c", -- Saved as `- [c]`
+        type = "complete", -- Counts as "done"
+        order = 2,
+      },
+      on_hold = {
+        marker = "⏸",
+        markdown = "/", -- Saved as `- [/]`
+        type = "inactive", -- Ignored in counts
+        order = 100,
+      },
+    },
+    style = {
+      -- Cancelled: dim red item, nested content dimmed like completed
+      CheckmateCancelledMarker = { fg = "#cc6666", bold = true },
+      CheckmateCancelledMainContent = { fg = "#cc6666", strikethrough = true },
+      CheckmateCancelledAdditionalContent = { link = "CheckmateCheckedAdditionalContent" },
+
+      -- On-hold: pastel yellow item, nested content dimmed like completed
+      CheckmateOnHoldMarker = { fg = "#f9e2af", bold = true },
+      CheckmateOnHoldMainContent = { fg = "#f9e2af" },
+      CheckmateOnHoldAdditionalContent = { link = "CheckmateCheckedAdditionalContent" },
     },
     metadata = {
-    -- Example: A @priority tag that has dynamic color based on the priority value
-    priority = {
-      style = function(context)
-        local value = context.value:lower()
-        if value == "high" then
-          return { fg = "#ff5555", bold = true }
-        elseif value == "medium" then
-          return { fg = "#ffb86c" }
-        elseif value == "low" then
-          return { fg = "#8be9fd" }
-        else -- fallback
-          return { fg = "#8be9fd" }
-        end
-      end,
-      get_value = function()
-        return "medium" -- Default priority
-      end,
-      choices = function()
-        return { "low", "medium", "high" }
-      end,
-      key = "<leader>tp",
-      sort_order = 10,
-      jump_to_on_insert = "value",
-      select_on_insert = true,
+      -- Example: A @done tag that also sets the todo item state when it is added and removed
+      done = {
+        aliases = { "completed", "finished" },
+        style = { fg = "#96de7a" },
+        get_value = function()
+          return tostring(os.date("%m/%d/%y"))
+        end,
+        key = "<leader>td",
+        on_add = function(todo)
+          require("checkmate").set_todo_state(todo, "checked")
+        end,
+        on_remove = function(todo)
+          require("checkmate").set_todo_state(todo, "unchecked")
+        end,
+        sort_order = 30,
+      },
     },
-    -- Example: A @started tag that uses a default date/time string when added
-    started = {
-      aliases = { "init" },
-      style = { fg = "#9fd6d5" },
-      get_value = function()
-        return tostring(os.date("%m/%d/%y"))
-      end,
-      key = "<leader>ts",
-      sort_order = 20,
-    },
-    -- Example: A @done tag that also sets the todo item state when it is added and removed
-    done = {
-      aliases = { "completed", "finished" },
-      style = { fg = "#96de7a" },
-      get_value = function()
-        return tostring(os.date("%m/%d/%y"))
-      end,
-      key = "<leader>td",
-      on_add = function(todo)
-        require("checkmate").set_todo_state(todo, "checked")
-      end,
-      on_remove = function(todo)
-        require("checkmate").set_todo_state(todo, "unchecked")
-      end,
-      sort_order = 30,
-    },
-  },
   },
 }
