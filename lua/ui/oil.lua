@@ -116,6 +116,48 @@ return {
           },
         },
       })
+
+      -- Remove a file's buffer when oil deletes the file. Otherwise the buffer
+      -- lingers pointing at a missing path, and returning to it (when oil
+      -- closes) makes Neovim's deleted-file handling freeze the UI for about a
+      -- second each time it is triggered.
+      local function canonical_path(p)
+        -- Resolve symlinks via the parent dir (the file itself is already gone)
+        -- so that /var/... and /private/var/... compare as equal.
+        local dir = vim.fn.fnamemodify(p, ":h")
+        local base = vim.fn.fnamemodify(p, ":t")
+        local real_dir = vim.uv.fs_realpath(dir)
+        if real_dir then
+          return vim.fs.normalize(real_dir) .. "/" .. base
+        end
+        return vim.fs.normalize(p)
+      end
+
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "OilActionsPost",
+        callback = function(args)
+          if args.data.err then
+            return
+          end
+          local oil_util = require("oil.util")
+          local oil_fs = require("oil.fs")
+          for _, action in ipairs(args.data.actions) do
+            if action.type == "delete" then
+              local _, path = oil_util.parse_url(action.url)
+              if path then
+                local target = canonical_path(oil_fs.posix_to_os_path(path))
+                for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+                  local name = vim.api.nvim_buf_get_name(bufnr)
+                  -- Skip unnamed and modified buffers (never discard unsaved work).
+                  if name ~= "" and not vim.bo[bufnr].modified and canonical_path(name) == target then
+                    pcall(vim.api.nvim_buf_delete, bufnr, { force = true })
+                  end
+                end
+              end
+            end
+          end
+        end,
+      })
     end,
   },
 }
