@@ -209,3 +209,29 @@ These keymaps are active only inside Oil buffers.
 | `<leader>fo` | Open current directory in macOS Finder |
 | `<C-h>` | Disabled (was horizontal split) |
 | `<C-t>` | Disabled (was open in new tab) |
+
+### nvim-dap (`dap.core` extra)
+
+Debugger keymaps, prefix `<leader>d`. Enabled by the `dap.core` extra. See `debugging.md` for full usage and per-language setup.
+
+| Key | Mode | Action |
+|-|-|-|
+| `<leader>db` | n | Toggle breakpoint |
+| `<leader>dB` | n | Breakpoint with condition |
+| `<leader>dc` | n | Run / Continue |
+| `<leader>da` | n | Run with arguments |
+| `<leader>dC` | n | Run to cursor |
+| `<leader>dg` | n | Go to line (no execute) |
+| `<leader>di` | n | Step into |
+| `<leader>dO` | n | Step over |
+| `<leader>do` | n | Step out |
+| `<leader>dj` | n | Down a stack frame |
+| `<leader>dk` | n | Up a stack frame |
+| `<leader>dl` | n | Run last |
+| `<leader>dP` | n | Pause |
+| `<leader>dr` | n | Toggle REPL (in Rust buffers: Rust Debuggables) |
+| `<leader>ds` | n | Session info |
+| `<leader>dt` | n | Terminate |
+| `<leader>dw` | n | Widgets (hover value) |
+| `<leader>du` | n | Toggle dap-ui |
+| `<leader>de` | n, x | Evaluate expression |

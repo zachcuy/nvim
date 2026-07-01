@@ -72,6 +72,14 @@ Custom snippet files:
 
 Markdown rendering in the buffer. Code block rendering is disabled (`code.enabled = false`); other render-markdown features (headings, lists, checkboxes) use defaults.
 
+### nvim-dap (`dap.lua` + `dap.core`/`dap.nlua` extras)
+
+Debugger (Debug Adapter Protocol client), enabled through the `dap.core` and `dap.nlua` LazyVim extras (imported in `lua/config/lazy.lua`). `dap.core` installs nvim-dap, nvim-dap-ui, nvim-dap-virtual-text, and mason-nvim-dap, and defines all `<leader>d` keymaps. Language adapters and launch configs come from the language extras (rust, clangd, typescript, php) and activate automatically once nvim-dap is present.
+
+`lua/langs/dap.lua` closes the single gap LazyVim leaves: it installs the PHP debug adapter (`php-debug-adapter`) via Mason, which LazyVim's php extra references but never installs.
+
+Adapters: `codelldb` (Rust, C/C++), `js-debug-adapter` (TS/JS, browser), `php-debug-adapter` (PHP), and the bundled `nlua` adapter (Lua). See `debugging.md` for full usage, installation, and per-language setup.
+
 ## Search and Navigation (`lua/search/`)
 
 ### fzf-lua (`fzf.lua`)

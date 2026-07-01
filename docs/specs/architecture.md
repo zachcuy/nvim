@@ -31,6 +31,8 @@ Defined in `lua/config/lazy.lua:18-26`:
 ```lua
 spec = {
   { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+  { import = "lazyvim.plugins.extras.dap.core" },
+  { import = "lazyvim.plugins.extras.dap.nlua" },
   { import = "langs" },
   { import = "search" },
   { import = "ui" },
@@ -61,6 +63,7 @@ Later imports can override earlier ones. A spec in `misc/` that targets the same
 | `nvim-lint.lua` | nvim-lint | Linter overrides (clears markdown linters) |
 | `luasnip.lua` | LuaSnip | Snippet engine with custom snippet directory |
 | `markdown.lua` | render-markdown.nvim | Markdown rendering (code blocks disabled) |
+| `dap.lua` | nvim-dap / mason.nvim | Installs the PHP debug adapter; see `debugging.md` |
 
 ### `lua/search/` — Search and Navigation
 
