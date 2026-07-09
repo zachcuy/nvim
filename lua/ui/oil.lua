@@ -114,6 +114,22 @@ return {
               vim.notify("Opened in Finder: " .. dir, vim.log.levels.INFO)
             end,
           },
+
+          -- gy → copy absolute path of current oil directory to clipboard
+          gy = {
+            desc = "oil: Copy current directory path",
+            callback = function()
+              local dir = require("oil").get_current_dir()
+
+              if not dir then
+                vim.notify("oil: could not resolve current directory", vim.log.levels.WARN)
+                return
+              end
+
+              vim.fn.setreg("+", dir)
+              vim.notify("Copied: " .. dir, vim.log.levels.INFO)
+            end,
+          },
         },
       })
 
