@@ -13,7 +13,7 @@ return {
       function()
         require("fzf-lua").live_grep({
           cwd = vim.fn.getcwd(),
-          rg_opts = "--fixed-strings --column --line-number --no-heading --color=always --smart-case",
+          rg_opts = '--fixed-strings --column --line-number --no-heading --color=always --smart-case -g "!.git" -g "!.jj"',
         })
       end,
       desc = "Grep Literal (cwd)",
@@ -48,6 +48,18 @@ return {
         picker.actions["alt-i"], picker.actions["alt-h"] = nil, nil
       end
     end
+    -- Grep pickers search gitignored and hidden files by default (ctrl-o / ctrl-y toggle back).
+    -- The .git/.jj globs stop --hidden from crawling VCS internals.
+    opts.grep = opts.grep or {}
+    opts.grep.no_ignore = true
+    opts.grep.hidden = true
+    opts.grep.rg_opts = '-g "!.git" -g "!.jj" ' .. require("fzf-lua.config").defaults.grep.rg_opts
+
+    -- Files picker includes gitignored files too (hidden files are already on by default,
+    -- and its fd_opts already exclude .git/.jj).
+    opts.files = opts.files or {}
+    opts.files.no_ignore = true
+
     -- Make the picker window bigger (LazyVim default is 0.8 x 0.8).
     opts.winopts = opts.winopts or {}
     opts.winopts.width = 0.90
