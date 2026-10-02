@@ -1,3 +1,26 @@
+-- Shift the @done date of the todo under the cursor by `days` (multiplied by count)
+local function shift_done_date(days)
+  local checkmate = require("checkmate")
+  local todo = checkmate.get_todo()
+  if not todo then
+    return
+  end
+  local _, value = todo.get_metadata("done")
+  local m, d, y = (value or ""):match("^(%d%d)/(%d%d)/(%d%d)$")
+  if not m then
+    vim.notify("No @done(mm/dd/yy) date on this todo", vim.log.levels.WARN)
+    return
+  end
+  -- os.time rolls day overflow into the adjacent month and year
+  local t = os.time({
+    year = 2000 + tonumber(y),
+    month = tonumber(m),
+    day = tonumber(d) + days * vim.v.count1,
+    hour = 12, -- noon avoids DST edge cases
+  })
+  checkmate.update_metadata("done", tostring(os.date("%m/%d/%y", t)))
+end
+
 return {
   "bngarren/checkmate.nvim",
   ft = "markdown",
@@ -57,6 +80,20 @@ return {
       ["<leader>tv"] = {
         rhs = "<cmd>Checkmate metadata select_value<CR>",
         desc = "Update the value of a metadata tag under the cursor",
+        modes = { "n" },
+      },
+      ["<leader>t."] = {
+        rhs = function()
+          shift_done_date(1)
+        end,
+        desc = "Increment @done date by one day",
+        modes = { "n" },
+      },
+      ["<leader>t,"] = {
+        rhs = function()
+          shift_done_date(-1)
+        end,
+        desc = "Decrement @done date by one day",
         modes = { "n" },
       },
 

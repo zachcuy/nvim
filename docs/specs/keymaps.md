@@ -194,6 +194,7 @@ All keymaps are markdown-only (`ft = "markdown"`).
 | `<leader>tp` | n | Add `@priority` tag |
 | `<leader>ts` | n | Add `@started` tag |
 | `<leader>td` | n | Add `@done` tag |
+| `<leader>t.` / `<leader>t,` | n | Shift `@done` date +1 / -1 day (accepts a count) |
 | `<leader>tv` | n | Update metadata value |
 | `<leader>t]` / `<leader>t[` | n | Jump next/prev metadata |
 

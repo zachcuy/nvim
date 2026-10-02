@@ -235,6 +235,7 @@ Markdown todo/checkbox management. Loaded only for markdown files (`ft = "markdo
 | `<leader>tp` | Add/update `@priority` tag |
 | `<leader>ts` | Add `@started` tag (auto-dates) |
 | `<leader>td` | Add `@done` tag (auto-dates, checks item) |
+| `<leader>t.` / `<leader>t,` | Shift `@done` date forward/back one day (accepts a count) |
 | `<leader>tv` | Update metadata tag value |
 | `<leader>t]` / `<leader>t[` | Jump to next/prev metadata tag |
 
