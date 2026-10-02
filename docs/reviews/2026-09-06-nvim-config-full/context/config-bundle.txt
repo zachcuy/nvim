@@ -1,0 +1,1403 @@
+===== FILE: /Users/zcu/.config/nvim/init.lua (       2 lines) =====
+     1	-- bootstrap lazy.nvim, LazyVim and your plugins
+     2	require("config.lazy")
+
+===== FILE: /Users/zcu/.config/nvim/lua/config/lazy.lua (      58 lines) =====
+     1	local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+     2	if not (vim.uv or vim.loop).fs_stat(lazypath) then
+     3	  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+     4	  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+     5	  if vim.v.shell_error ~= 0 then
+     6	    vim.api.nvim_echo({
+     7	      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+     8	      { out, "WarningMsg" },
+     9	      { "\nPress any key to exit..." },
+    10	    }, true, {})
+    11	    vim.fn.getchar()
+    12	    os.exit(1)
+    13	  end
+    14	end
+    15	vim.opt.rtp:prepend(lazypath)
+    16	
+    17	require("lazy").setup({
+    18	  spec = {
+    19	    -- add LazyVim and import its plugins
+    20	    { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+    21	    -- debugging: nvim-dap core + Lua adapter (language adapters come from the lang extras)
+    22	    { import = "lazyvim.plugins.extras.dap.core" },
+    23	    { import = "lazyvim.plugins.extras.dap.nlua" },
+    24	    -- import/override with your plugins
+    25	    { import = "langs" },
+    26	    { import = "search" },
+    27	    { import = "ui" },
+    28	    { import = "misc" },
+    29	  },
+    30	  defaults = {
+    31	    -- By default, only LazyVim plugins will be lazy-loaded. Your custom plugins will load during startup.
+    32	    -- If you know what you're doing, you can set this to `true` to have all your custom plugins lazy-loaded by default.
+    33	    lazy = false,
+    34	    -- It's recommended to leave version=false for now, since a lot the plugin that support versioning,
+    35	    -- have outdated releases, which may break your Neovim install.
+    36	    version = false, -- always use the latest git commit
+    37	    -- version = "*", -- try installing the latest stable version for plugins that support semver
+    38	  },
+    39	  checker = {
+    40	    enabled = false, -- check for plugin updates periodically
+    41	    notify = false, -- notify on update
+    42	  }, -- automatically check for plugin updates
+    43	  performance = {
+    44	    rtp = {
+    45	      -- disable some rtp plugins
+    46	      disabled_plugins = {
+    47	        "gzip",
+    48	        -- "matchit",
+    49	        -- "matchparen",
+    50	        -- "netrwPlugin",
+    51	        "tarPlugin",
+    52	        "tohtml",
+    53	        "tutor",
+    54	        "zipPlugin",
+    55	      },
+    56	    },
+    57	  },
+    58	})
+
+===== FILE: /Users/zcu/.config/nvim/lua/config/options.lua (     141 lines) =====
+     1	-- host stuff
+     2	vim.g.python3_host_prog = "/usr/bin/python3"
+     3	vim.g.loaded_perl_provider = 0
+     4	
+     5	-- Disable relative line numbers
+     6	vim.opt.relativenumber = true
+     7	
+     8	-- Ensure absolute line numbers are enabled
+     9	vim.opt.number = true
+    10	
+    11	-- bugged with nvim-cmp (Jun 17, 2024)
+    12	vim.o.cursorcolumn = false
+    13	
+    14	-- Consider - as part of keyword
+    15	vim.opt.iskeyword:append("-")
+    16	
+    17	-- Disable GUI cursor shaping (e.g., blinking, color changes)
+    18	vim.opt.guicursor = ""
+    19	
+    20	-- Define highlight groups for cursor colors
+    21	vim.api.nvim_set_hl(0, "NormalCursor", { fg = "#1e1e2e", bg = "#ffffff" })
+    22	vim.api.nvim_set_hl(0, "InsertCursor", { fg = "#1e1e2e", bg = "#ffd400" })
+    23	vim.api.nvim_set_hl(0, "VisualCursor", { fg = "#1e1e2e", bg = "#ffd400" })
+    24	vim.api.nvim_set_hl(0, "ReplaceCursor", { fg = "#1e1e2e", bg = "#ffd400" })
+    25	vim.api.nvim_set_hl(0, "CommandCursor", { fg = "#1e1e2e", bg = "#ffd400" })
+    26	
+    27	-- Configure guicursor
+    28	vim.opt.guicursor = {
+    29	  "n-v-c-sm:block-NormalCursor/lCursor",
+    30	
+    31	  -- Insert mode: blinking block cursor
+    32	  "i-ci-ve:block-InsertCursor/lCursor-blinkwait700-blinkon400-blinkoff250",
+    33	
+    34	  -- Replace mode: blinking block cursor
+    35	  "r-cr:block-ReplaceCursor/lCursor-blinkwait700-blinkon400-blinkoff250",
+    36	
+    37	  -- Command mode: blinking block cursor
+    38	  "o:block-CommandCursor/lCursor-blinkwait700-blinkon400-blinkoff250",
+    39	}
+    40	
+    41	-- Disable netrw plugin
+    42	vim.g.loaded_netrw = 1
+    43	vim.g.loaded_netrwPlugin = 1
+    44	
+    45	-- Set netrw browsing split behavior
+    46	vim.g.netrw_browse_split = 0
+    47	
+    48	-- Disable the netrw banner
+    49	vim.g.netrw_banner = 0
+    50	
+    51	-- Set the netrw window size
+    52	vim.g.netrw_winsize = 25
+    53	
+    54	-- Set line numbers
+    55	vim.opt.nu = true
+    56	
+    57	-- Set tab width to 4 spaces
+    58	vim.opt.tabstop = 4
+    59	
+    60	-- Set soft tab stop to 4 spaces
+    61	vim.opt.softtabstop = 4
+    62	
+    63	-- Use actual tabs (not spaces)
+    64	vim.opt.expandtab = true
+    65	
+    66	-- Set the width for auto-indent to the same as tabstop
+    67	vim.opt.shiftwidth = 0
+    68	
+    69	-- Enable smart indenting
+    70	vim.opt.smartindent = true
+    71	
+    72	-- Set options for code completion
+    73	vim.opt.completeopt = "menu,menuone,noselect"
+    74	
+    75	-- Disable line wrapping and changing line/break indent behavior
+    76	vim.opt.wrap = false
+    77	vim.opt.linebreak = true
+    78	vim.opt.breakindent = true
+    79	
+    80	-- Disable swap file creation
+    81	vim.opt.swapfile = false
+    82	
+    83	-- Disable backup file creation
+    84	vim.opt.backup = false
+    85	
+    86	-- Enable persistent undo
+    87	vim.opt.undofile = true
+    88	
+    89	-- Ignore case in search patterns
+    90	vim.opt.ignorecase = true
+    91	
+    92	-- Keep results highlighted after searching
+    93	vim.opt.hlsearch = true
+    94	
+    95	-- Highlight the current line
+    96	vim.opt.cursorline = false
+    97	
+    98	-- Enable 24-bit RGB color in the terminal
+    99	vim.opt.termguicolors = true
+   100	
+   101	-- Keep 8 lines visible above/below the cursor
+   102	vim.opt.scrolloff = 3
+   103	
+   104	-- Always show the sign column
+   105	vim.opt.signcolumn = "yes"
+   106	
+   107	-- Add "@-@" to the list of valid file name characters
+   108	vim.opt.isfname:append("@-@")
+   109	
+   110	-- Set the update time for swapping files, writing swap files, etc.
+   111	vim.opt.updatetime = 50
+   112	
+   113	-- Automatically read files when changed outside of Vim
+   114	vim.opt.autoread = true
+   115	
+   116	-- Highlight column 80 to help keep code within that limit
+   117	-- vim.opt.colorcolumn = "120"
+   118	
+   119	-- Set options for session saving
+   120	vim.opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp" }
+   121	
+   122	-- Set spell check language to English
+   123	vim.opt.spelllang = { "en" }
+   124	
+   125	-- Open new vertical splits to the right of the current window
+   126	vim.opt.splitright = true
+   127	
+   128	-- Open new horizontal splits below the current window
+   129	vim.opt.splitbelow = true
+   130	
+   131	-- Disable snacks.nvim animation
+   132	vim.g.snacks_animate = false
+   133	
+   134	-- Enable diagnostics by default
+   135	vim.diagnostic.enable(true)
+   136	
+   137	-- Disable autoformat by default
+   138	vim.g.autoformat = false
+   139	
+   140	-- Disable markdown auto close (markdown-preview)
+   141	vim.g.mkdp_auto_close = 0
+
+===== FILE: /Users/zcu/.config/nvim/lua/config/keymaps.lua (     109 lines) =====
+     1	local keymap = vim.keymap
+     2	local opts = { noremap = true, silent = true }
+     3	
+     4	-- clipboard shit
+     5	vim.opt.clipboard = "unnamedplus"
+     6	keymap.set({ "n", "v" }, "<C-c>", [["+y]])
+     7	
+     8	-- increment/decrement
+     9	keymap.set("n", "=", "<C-a>")
+    10	keymap.set("n", "-", "<C-x>")
+    11	
+    12	-- select all
+    13	keymap.set("n", "<C-a>", "gg<S-v>G")
+    14	
+    15	-- split window
+    16	-- keymap.set("n", "ss", ":split<Return>", opts)
+    17	keymap.set("n", "sv", ":vsplit<Return>", opts)
+    18	
+    19	-- resize window
+    20	keymap.set("n", "<C-S-h>", "2<C-w><", opts)
+    21	keymap.set("n", "<C-S-l>", "2<C-w>>", opts)
+    22	keymap.set("n", "<C-S-k>", "2<C-w>+", opts)
+    23	keymap.set("n", "<C-S-j>", "2<C-w>-", opts)
+    24	
+    25	-- move up/down work on wrapped lines of text
+    26	keymap.set("n", "j", "gj", opts)
+    27	keymap.set("n", "k", "gk", opts)
+    28	
+    29	-- re-center cursor after jumps up/down
+    30	keymap.set("n", "<C-d>", "20<C-d>zz", opts)
+    31	keymap.set("n", "<C-u>", "20<C-u>zz", opts)
+    32	
+    33	-- visual select move down
+    34	keymap.set("v", "<C-d>", "20<C-d>zz", opts)
+    35	keymap.set("v", "<C-u>", "20<C-u>zz", opts)
+    36	
+    37	-- re-center cursor after search movements up/down
+    38	keymap.set("n", "n", "nzz", opts)
+    39	keymap.set("n", "N", "Nzz", opts)
+    40	
+    41	-- map p (lower) to P (upper) in visual mode to not stomp on register
+    42	keymap.set("v", "p", "P", opts)
+    43	keymap.set("v", "P", "p", opts)
+    44	
+    45	-- open oil
+    46	keymap.set("n", "<Leader>o", ":Oil<Return>", opts)
+    47	keymap.set("n", "<Leader>e", ":Oil<Return>", opts)
+    48	
+    49	-- delete all buffers
+    50	keymap.set("n", "<Leader>ba", ":bufdo bd<Return>", { noremap = true, silent = true, desc = "Delete all buffers" })
+    51	
+    52	-- move buffers left/right
+    53	keymap.del("n", "<Leader>bp")
+    54	keymap.del("n", "<Leader>bP")
+    55	keymap.set(
+    56	  "n",
+    57	  "<Leader>bn",
+    58	  ":BufferLineMoveNext<Return>",
+    59	  { noremap = true, silent = true, desc = "Move buffer next" }
+    60	)
+    61	keymap.set(
+    62	  "n",
+    63	  "<Leader>bp",
+    64	  ":BufferLineMovePrev<Return>",
+    65	  { noremap = true, silent = true, desc = "Move buffer prev" }
+    66	)
+    67	
+    68	-- grug-far (search and replace)
+    69	keymap.set(
+    70	  "n",
+    71	  "<leader>r",
+    72	  [[:lua require('grug-far').open({ prefills = { paths = vim.fn.expand("%"), flags = '-F -i' } })<CR>]],
+    73	  { noremap = true, silent = true, desc = "Search and Replace Current File" }
+    74	)
+    75	
+    76	-- disable the default 's' key behavior (and capital S for consistency)
+    77	-- vim.keymap.set({ "n", "x", "o" }, "s", "", { noremap = true })
+    78	-- vim.keymap.set({ "n", "x", "o" }, "S", "", { noremap = true })
+    79	
+    80	-- disable default 'S' key since it's equivalent to doing 'cc' and clashes with nvim-surround
+    81	vim.keymap.set({ "n" }, "S", "", { noremap = true })
+    82	
+    83	-- disable macro recording
+    84	vim.keymap.set({ "n", "v" }, "q", "", { noremap = true })
+    85	
+    86	-- https://vonheikemen.github.io/devlog/tools/how-to-survive-without-multiple-cursors-in-vim/
+    87	-- use . to replace the next match
+    88	-- use n to skip current match and move onto next
+    89	keymap.set("n", "<leader>j", "*``cgn", { noremap = true, silent = true })
+    90	
+    91	-- yank file paths
+    92	keymap.set("n", "<leader>yp", function()
+    93	  vim.fn.setreg("+", vim.fn.expand("%:."))
+    94	end, { noremap = true, silent = true, desc = "Yank path (relative to cwd)" })
+    95	keymap.set("n", "<leader>yP", function()
+    96	  vim.fn.setreg("+", vim.fn.expand("%:~"))
+    97	end, { noremap = true, silent = true, desc = "Yank path (relative to home)" })
+    98	-- keymap.set("n", "<leader>yf", function()
+    99	--   vim.fn.setreg("+", vim.fn.expand("%:p"))
+   100	-- end, { noremap = true, silent = true, desc = "Yank path (absolute)" })
+   101	-- keymap.set("n", "<leader>yn", function()
+   102	--   vim.fn.setreg("+", vim.fn.expand("%:t"))
+   103	-- end, { noremap = true, silent = true, desc = "Yank filename" })
+   104	
+   105	-- keymap to disable/pause lsp
+   106	keymap.set("n", "<leader>cp", ":LspStop<Return>", { noremap = true, silent = true, desc = "Disable LSP" })
+   107	
+   108	vim.keymap.del("n", "<leader>uz")
+   109	vim.keymap.del("n", "<leader>uZ")
+
+===== FILE: /Users/zcu/.config/nvim/lua/config/autocmds.lua (      34 lines) =====
+     1	-- Autocmds are automatically loaded on the VeryLazy event
+     2	-- Default autocmds that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/autocmds.lua
+     3	--
+     4	-- Add any additional autocmds here
+     5	-- with `vim.api.nvim_create_autocmd`
+     6	--
+     7	-- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
+     8	-- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
+     9	
+    10	vim.api.nvim_create_autocmd("FileType", {
+    11	  pattern = { "markdown", "text" },
+    12	  callback = function()
+    13	    vim.opt_local.spell = false
+    14	    vim.opt_local.conceallevel = 0
+    15	    vim.opt_local.wrap = false
+    16	  end
+    17	})
+    18	
+    19	-- Auto-close block comments in C/C++: typing /* inserts /* | */
+    20	vim.api.nvim_create_autocmd("FileType", {
+    21	  pattern = { "c", "cpp" },
+    22	  callback = function()
+    23	    local close = vim.api.nvim_replace_termcodes("*  */<Left><Left><Left>", true, false, true)
+    24	    vim.keymap.set("i", "*", function()
+    25	      local col = vim.fn.col(".")
+    26	      local line = vim.fn.getline(".")
+    27	      if line:sub(col - 1, col - 1) == "/" then
+    28	        vim.api.nvim_feedkeys(close, "n", false)
+    29	      else
+    30	        vim.api.nvim_feedkeys("*", "n", false)
+    31	      end
+    32	    end, { buffer = true })
+    33	  end,
+    34	})
+
+===== FILE: /Users/zcu/.config/nvim/lua/langs/lsp.lua (      10 lines) =====
+     1	return {
+     2	  {
+     3	    "neovim/nvim-lspconfig",
+     4	    opts = {
+     5	      servers = {
+     6	        angularls = false, -- Disable Angular Language Server
+     7	      },
+     8	    },
+     9	  },
+    10	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/langs/blink.lua (      27 lines) =====
+     1	return {
+     2	  "saghen/blink.cmp",
+     3	  opts = {
+     4	    keymap = {
+     5	      preset = "default",
+     6	      ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
+     7	      ["<C-k>"] = { "show_signature", "hide_signature", "fallback" },
+     8	      ["<C-e>"] = { "hide", "fallback" },
+     9	      ["<C-f>"] = { "select_and_accept", "fallback" },
+    10	
+    11	      ["<Up>"] = { "select_prev", "fallback" },
+    12	      ["<Down>"] = { "select_next", "fallback" },
+    13	      ["<C-p>"] = { "select_prev", "fallback" },
+    14	      ["<C-n>"] = { "select_next", "fallback" },
+    15	
+    16	      ["<C-.>"] = { "scroll_documentation_up", "fallback" },
+    17	      ["<C-,>"] = { "scroll_documentation_down", "fallback" },
+    18	
+    19	      -- disable keymaps that preset may have set
+    20	      -- falling back so that it uses whatever is in lazyvim/neovim's keymaps
+    21	      ["<CR>"] = { "fallback" },
+    22	      ["<Tab>"] = { "fallback" },
+    23	      ["<S-Tab>"] = { "fallback" },
+    24	      ["<C-b>"] = { "fallback" },
+    25	    },
+    26	  },
+    27	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/langs/conform.lua (      25 lines) =====
+     1	return {
+     2	  {
+     3	    "stevearc/conform.nvim",
+     4	    opts = {
+     5	      formatters_by_ft = {
+     6	        astro = { "prettierd", "prettier" },
+     7	        c = { "clang_format" },
+     8	        cpp = { "clang_format" },
+     9	        html = { "prettierd", "prettier" },
+    10	        java = { "prettier" },
+    11	        javascript = { "prettierd", "prettier" },
+    12	        lua = { "stylua" },
+    13	        typescript = { "prettierd", "prettier" },
+    14	        rust = { "rustfmt" },
+    15	        -- markdown = { "prettierd", "prettier" },
+    16	        css = { "prettierd", "prettier" },
+    17	        typescriptreact = { "prettierd", "prettier" }, -- Added TSX support
+    18	        javascriptreact = { "prettierd", "prettier" }, -- Added JSX support
+    19	        scss = { "prettierd", "prettier" }, -- Added SCSS
+    20	        json = { "prettierd", "prettier" }, -- Added JSON
+    21	        yaml = { "prettierd", "prettier" }, -- Added YAML
+    22	      },
+    23	    },
+    24	  },
+    25	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/langs/nvim-lint.lua (      10 lines) =====
+     1	return {
+     2	  {
+     3	    "mfussenegger/nvim-lint",
+     4	    opts = {
+     5	      linters_by_ft = {
+     6	        markdown = {}, -- This clears the linters assigned to markdown
+     7	      },
+     8	    },
+     9	  },
+    10	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/langs/luasnip.lua (      11 lines) =====
+     1	return {
+     2	  "L3MON4D3/LuaSnip",
+     3	  dependencies = {
+     4	    "rafamadriz/friendly-snippets",
+     5	  },
+     6	  config = function()
+     7	    require("luasnip.loaders.from_vscode").lazy_load()
+     8	    -- Load your custom snippets
+     9	    require("luasnip.loaders.from_vscode").lazy_load({ paths = { "~/.config/nvim/snippets" } })
+    10	  end,
+    11	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/langs/markdown.lua (      10 lines) =====
+     1	return {
+     2	  {
+     3	    "MeanderingProgrammer/render-markdown.nvim",
+     4	    opts = {
+     5	      code = {
+     6	        enabled = false,
+     7	      },
+     8	    },
+     9	  },
+    10	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/langs/dap.lua (      12 lines) =====
+     1	-- PHP debugging. LazyVim's PHP extra wires up dap.adapters.php but never adds the
+     2	-- adapter to Mason's install list, so it never gets installed. Add it here. Once
+     3	-- installed, mason-nvim-dap supplies the "PHP: Listen for Xdebug" launch config
+     4	-- automatically. Rust, C/C++, and TS/JS need nothing extra -- their adapters and
+     5	-- launch configs ship with the matching lang extras and light up once dap.core
+     6	-- is enabled.
+     7	return {
+     8	  {
+     9	    "mason-org/mason.nvim",
+    10	    opts = { ensure_installed = { "php-debug-adapter" } },
+    11	  },
+    12	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/search/fzf.lua (      69 lines) =====
+     1	return {
+     2	  "ibhagwan/fzf-lua",
+     3	  keys = {
+     4	    {
+     5	      "<leader>/",
+     6	      function()
+     7	        LazyVim.pick("live_grep", { root = false })()
+     8	      end,
+     9	      desc = "Grep (cwd)",
+    10	    },
+    11	    {
+    12	      "<leader>`",
+    13	      function()
+    14	        require("fzf-lua").live_grep({
+    15	          cwd = vim.fn.getcwd(),
+    16	          rg_opts = '--fixed-strings --column --line-number --no-heading --color=always --smart-case -g "!.git" -g "!.jj"',
+    17	        })
+    18	      end,
+    19	      desc = "Grep Literal (cwd)",
+    20	    },
+    21	    {
+    22	      "<leader><space>",
+    23	      function()
+    24	        require("fzf-lua").files({ cwd = vim.fn.getcwd() })
+    25	      end,
+    26	      desc = "Find Files (cwd)",
+    27	    },
+    28	  },
+    29	  opts = function(_, opts)
+    30	    -- On macOS the Option key sends Alt, which tmux grabs before fzf sees it.
+    31	    -- Move the picker's Alt actions onto free Ctrl keys so they work here.
+    32	    -- Ctrl-g is avoided for the shared toggles: grep pickers already bind it to
+    33	    -- the regex/fuzzy search switch.
+    34	    local files = require("fzf-lua.config").defaults.actions.files
+    35	    files["ctrl-o"] = files["alt-i"] -- toggle .gitignore
+    36	    files["ctrl-y"] = files["alt-h"] -- toggle hidden files
+    37	    files["ctrl-l"] = files["alt-q"] -- send selection to quickfix
+    38	    files["ctrl-g"] = files["alt-f"] -- toggle follow symlinks (files picker only)
+    39	    files["alt-i"], files["alt-h"], files["alt-q"], files["alt-f"] = nil, nil, nil, nil
+    40	
+    41	    -- LazyVim re-binds ignore/hidden per picker (files, grep) without marking them
+    42	    -- header = false, so those bindings are what the picker's header text shows.
+    43	    -- Mirror the Ctrl mapping here so the header stops advertising the old Alt keys.
+    44	    for _, picker in ipairs({ opts.files, opts.grep }) do
+    45	      if picker and picker.actions then
+    46	        picker.actions["ctrl-o"] = picker.actions["alt-i"]
+    47	        picker.actions["ctrl-y"] = picker.actions["alt-h"]
+    48	        picker.actions["alt-i"], picker.actions["alt-h"] = nil, nil
+    49	      end
+    50	    end
+    51	    -- Grep pickers search gitignored and hidden files by default (ctrl-o / ctrl-y toggle back).
+    52	    -- The .git/.jj globs stop --hidden from crawling VCS internals.
+    53	    opts.grep = opts.grep or {}
+    54	    opts.grep.no_ignore = true
+    55	    opts.grep.hidden = true
+    56	    opts.grep.rg_opts = '-g "!.git" -g "!.jj" ' .. require("fzf-lua.config").defaults.grep.rg_opts
+    57	
+    58	    -- Files picker includes gitignored files too (hidden files are already on by default,
+    59	    -- and its fd_opts already exclude .git/.jj).
+    60	    opts.files = opts.files or {}
+    61	    opts.files.no_ignore = true
+    62	
+    63	    -- Make the picker window bigger (LazyVim default is 0.8 x 0.8).
+    64	    opts.winopts = opts.winopts or {}
+    65	    opts.winopts.width = 0.90
+    66	    opts.winopts.height = 0.90
+    67	    return opts
+    68	  end,
+    69	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/search/grug-far.lua (      22 lines) =====
+     1	return {
+     2	  "MagicDuck/grug-far.nvim",
+     3	  opts = { headerMaxWidth = 80 },
+     4	  cmd = "GrugFar",
+     5	  keys = {
+     6	    {
+     7	      "<leader>sr",
+     8	      function()
+     9	        local grug = require("grug-far")
+    10	        local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
+    11	        grug.open({
+    12	          transient = true,
+    13	          prefills = {
+    14	            filesFilter = ext and ext ~= "" and "*." .. ext or nil,
+    15	          },
+    16	        })
+    17	      end,
+    18	      mode = { "n", "v" },
+    19	      desc = "Search and Replace",
+    20	    },
+    21	  },
+    22	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/search/harpoon2.lua (      44 lines) =====
+     1	return {
+     2	  {
+     3	    -- "ThePrimeagen/harpoon",
+     4	    -- branch = "harpoon2",
+     5	    -- opts = {
+     6	    --   menu = {
+     7	    --     width = vim.api.nvim_win_get_width(0) - 4,
+     8	    --   },
+     9	    --   settings = {
+    10	    --     save_on_toggle = true,
+    11	    --   },
+    12	    -- },
+    13	    -- keys = function()
+    14	    --   local keys = {
+    15	    --     {
+    16	    --       "<leader>a",
+    17	    --       function()
+    18	    --         require("harpoon"):list():add()
+    19	    --       end,
+    20	    --       desc = "Harpoon File",
+    21	    --     },
+    22	    --     {
+    23	    --       "<leader>h",
+    24	    --       function()
+    25	    --         local harpoon = require("harpoon")
+    26	    --         harpoon.ui:toggle_quick_menu(harpoon:list())
+    27	    --       end,
+    28	    --       desc = "Harpoon Quick Menu",
+    29	    --     },
+    30	    --   }
+    31	    --
+    32	    --   for i = 1, 5 do
+    33	    --     table.insert(keys, {
+    34	    --       "<leader>" .. i,
+    35	    --       function()
+    36	    --         require("harpoon"):list():select(i)
+    37	    --       end,
+    38	    --       desc = "Harpoon to File " .. i,
+    39	    --     })
+    40	    --   end
+    41	    --   return keys
+    42	    -- end,
+    43	  },
+    44	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/search/arrow.lua (      11 lines) =====
+     1	return {
+     2	  "otavioschwanck/arrow.nvim",
+     3	  dependencies = {
+     4	    { "nvim-mini/mini.icons" },
+     5	  },
+     6	  opts = {
+     7	    show_icons = true,
+     8	    leader_key = ';',
+     9	    buffer_leader_key = 'm', -- Per Buffer Mappings
+    10	  }
+    11	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/ui/colorscheme.lua (      13 lines) =====
+     1	return {
+     2	  {
+     3	    "danfry1/lume",
+     4	    lazy = false,
+     5	    priority = 1000,
+     6	    config = function()
+     7	      require("lume").setup()
+     8	      vim.cmd("colorscheme lume")
+     9	      vim.api.nvim_set_hl(0, "Comment", { fg = "#75d7b3", italic = true })
+    10	      vim.api.nvim_set_hl(0, "@comment", { fg = "#75d7b3", italic = true })
+    11	    end,
+    12	  },
+    13	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/ui/snacks.lua (      23 lines) =====
+     1	return {
+     2	  "folke/snacks.nvim",
+     3	  opts = {
+     4	    -- Lazygit theme is managed in ~/Library/Application Support/lazygit/config.yml
+     5	    -- (includes os.editPreset = "nvim-remote" and Lume theme colors)
+     6	    lazygit = {
+     7	      configure = false,
+     8	      win = {
+     9	        style = "lazygit",
+    10	        wo = { winhighlight = "NormalFloat:Normal" },
+    11	      },
+    12	    },
+    13	    dashboard = { enabled = false },
+    14	    picker = {
+    15	      sources = {
+    16	        recent = {
+    17	          -- Force sorting by the last time the file was accessed
+    18	          sort = { fields = { "idx" } },
+    19	        },
+    20	      },
+    21	    },
+    22	  },
+    23	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/ui/oil.lua (     179 lines) =====
+     1	return {
+     2	  {
+     3	    "stevearc/oil.nvim",
+     4	    ---@module 'oil'
+     5	    ---@type oil.SetupOpts
+     6	
+     7	    -- optional dependencies
+     8	    dependencies = { { "nvim-mini/mini.icons", opts = {} } },
+     9	
+    10	    -- config
+    11	    config = function()
+    12	      local oil = require("oil")
+    13	
+    14	      -- Register a custom column to show the file type (e.g., markdown, c++)
+    15	      require("oil.columns").register("filetype", {
+    16	        render = function(entry)
+    17	          local name = entry[require("oil.constants").FIELD_NAME] or ""
+    18	          local type = entry[require("oil.constants").FIELD_TYPE]
+    19	          if type == "directory" then
+    20	            return "dir"
+    21	          elseif type == "link" then
+    22	            return "link"
+    23	          end
+    24	
+    25	          -- Try to detect Neovim filetype, fallback to file extension
+    26	          local ft = vim.filetype.match({ filename = name })
+    27	          if not ft then
+    28	            local ext = name:match("%.([^.]+)$")
+    29	            ft = ext or "file"
+    30	          end
+    31	
+    32	          -- Custom overrides for specific extensions/filetypes
+    33	          local overrides = {
+    34	            cpp = "c++",
+    35	            md = "markdown",
+    36	            js = "javascript",
+    37	            ts = "typescript",
+    38	            py = "python",
+    39	            rs = "rust",
+    40	            sh = "bash"
+    41	          }
+    42	          return overrides[ft] or ft
+    43	        end,
+    44	        parse = function(line)
+    45	          return line:match("^(%S+)%s+(.*)$")
+    46	        end
+    47	      })
+    48	
+    49	      oil.setup({
+    50	        -- Add the custom filetype column and mtime for last modified
+    51	        columns = {
+    52	          "icon",
+    53	          { "filetype", highlight = "Comment" },
+    54	          -- { "size", highlight = "String" }, -- Optional: un-comment to show file size
+    55	          { "mtime", highlight = "Number" },
+    56	        },
+    57	        delete_to_trash = true,
+    58	
+    59	        view_options = {
+    60	          show_hidden = true,
+    61	          natural_order = true,
+    62	        },
+    63	        keymaps = {
+    64	          -- change ctrl + s keymap to save changes
+    65	          ["<C-s>"] = {
+    66	            callback = function()
+    67	              vim.cmd("write") -- Saves the current buffer
+    68	            end,
+    69	            desc = "Save current buffer",
+    70	          },
+    71	
+    72	          -- disable open in horizontal split window, open in new tab
+    73	          ["<C-h>"] = "<Nop>",
+    74	          ["<C-t>"] = "<Nop>",
+    75	
+    76	          -- add keymap for q to close the oil buffer
+    77	          ["q"] = "actions.close",
+    78	
+    79	          -- create a new mapping, gs, to search and replace in the current directory
+    80	          gs = {
+    81	            callback = function()
+    82	              -- get the current directory
+    83	              local prefills = { paths = oil.get_current_dir() }
+    84	
+    85	              local grug_far = require("grug-far")
+    86	              -- instance check
+    87	              if not grug_far.has_instance("explorer") then
+    88	                grug_far.open({
+    89	                  instanceName = "explorer",
+    90	                  prefills = prefills,
+    91	                  staticTitle = "Find and Replace from Explorer",
+    92	                })
+    93	              else
+    94	                grug_far.open_instance("explorer")
+    95	                -- updating the prefills without clearing the search and other fields
+    96	                grug_far.update_instance_prefills("explorer", prefills, false)
+    97	              end
+    98	            end,
+    99	            desc = "oil: Search in directory",
+   100	          },
+   101	
+   102	          -- <leader>fo → open the directory oil is currently showing in Finder
+   103	          ["<leader>fo"] = {
+   104	            desc = "Open current directory in Finder",
+   105	            callback = function()
+   106	              local dir = require("oil").get_current_dir()
+   107	
+   108	              if not dir then
+   109	                vim.notify("oil: could not resolve current directory", vim.log.levels.WARN)
+   110	                return
+   111	              end
+   112	
+   113	              vim.fn.jobstart({ "open", dir }, { detach = true })
+   114	              vim.notify("Opened in Finder: " .. dir, vim.log.levels.INFO)
+   115	            end,
+   116	          },
+   117	
+   118	          -- gy → copy absolute path of current oil directory to clipboard
+   119	          gy = {
+   120	            desc = "oil: Copy current directory path",
+   121	            callback = function()
+   122	              local dir = require("oil").get_current_dir()
+   123	
+   124	              if not dir then
+   125	                vim.notify("oil: could not resolve current directory", vim.log.levels.WARN)
+   126	                return
+   127	              end
+   128	
+   129	              vim.fn.setreg("+", dir)
+   130	              vim.notify("Copied: " .. dir, vim.log.levels.INFO)
+   131	            end,
+   132	          },
+   133	        },
+   134	      })
+   135	
+   136	      -- Remove a file's buffer when oil deletes the file. Otherwise the buffer
+   137	      -- lingers pointing at a missing path, and returning to it (when oil
+   138	      -- closes) makes Neovim's deleted-file handling freeze the UI for about a
+   139	      -- second each time it is triggered.
+   140	      local function canonical_path(p)
+   141	        -- Resolve symlinks via the parent dir (the file itself is already gone)
+   142	        -- so that /var/... and /private/var/... compare as equal.
+   143	        local dir = vim.fn.fnamemodify(p, ":h")
+   144	        local base = vim.fn.fnamemodify(p, ":t")
+   145	        local real_dir = vim.uv.fs_realpath(dir)
+   146	        if real_dir then
+   147	          return vim.fs.normalize(real_dir) .. "/" .. base
+   148	        end
+   149	        return vim.fs.normalize(p)
+   150	      end
+   151	
+   152	      vim.api.nvim_create_autocmd("User", {
+   153	        pattern = "OilActionsPost",
+   154	        callback = function(args)
+   155	          if args.data.err then
+   156	            return
+   157	          end
+   158	          local oil_util = require("oil.util")
+   159	          local oil_fs = require("oil.fs")
+   160	          for _, action in ipairs(args.data.actions) do
+   161	            if action.type == "delete" then
+   162	              local _, path = oil_util.parse_url(action.url)
+   163	              if path then
+   164	                local target = canonical_path(oil_fs.posix_to_os_path(path))
+   165	                for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+   166	                  local name = vim.api.nvim_buf_get_name(bufnr)
+   167	                  -- Skip unnamed and modified buffers (never discard unsaved work).
+   168	                  if name ~= "" and not vim.bo[bufnr].modified and canonical_path(name) == target then
+   169	                    pcall(vim.api.nvim_buf_delete, bufnr, { force = true })
+   170	                  end
+   171	                end
+   172	              end
+   173	            end
+   174	          end
+   175	        end,
+   176	      })
+   177	    end,
+   178	  },
+   179	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/ui/bufferline.lua (      27 lines) =====
+     1	return {
+     2	  -- buffer line
+     3	  {
+     4	    "akinsho/bufferline.nvim",
+     5	    event = "VeryLazy",
+     6	    keys = {
+     7	      { "<Tab>", "<Cmd>BufferLineCycleNext<CR>", desc = "Next Buffer" },
+     8	      { "<S-Tab>", "<Cmd>BufferLineCyclePrev<CR>", desc = "Prev Buffer" },
+     9	      { "<leader>bs", "<Cmd>BufferLineSortByRelativeDirectory<CR>", desc = "Sort Buffers" },
+    10	    },
+    11	    opts = {
+    12	      options = {
+    13	        -- mode = "tabs",
+    14	        show_buffer_close_icons = false,
+    15	        show_close_icon = false,
+    16	        diagnostics = false,
+    17	        max_name_length = 12,
+    18	        show_buffer_icons = false,
+    19	      },
+    20	      highlights = {
+    21	        buffer_selected = {
+    22	          fg = "#FCF596",
+    23	        },
+    24	      },
+    25	    },
+    26	  },
+    27	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/ui/scrollbar.lua (     125 lines) =====
+     1	return {}
+     2	-- return {
+     3	--   "petertriho/nvim-scrollbar",
+     4	--   event = "VeryLazy",
+     5	--   dependencies = {
+     6	--     "lewis6991/gitsigns.nvim", -- Git integration
+     7	--     "kevinhwang91/nvim-hlslens", -- Enhanced search
+     8	--   },
+     9	--   config = function()
+    10	--     -- Get Catppuccin colors
+    11	--     -- This loads the active flavor (mocha, macchiato, frappe, or latte)
+    12	--     local colors = require("catppuccin.palettes").get_palette()
+    13	--
+    14	--     require("scrollbar").setup({
+    15	--       show_in_active_only = true,
+    16	--       hide_if_all_visible = false,
+    17	--       throttle_ms = 50,
+    18	--
+    19	--       -- Custom colors that match Catppuccin
+    20	--       handle = {
+    21	--         color = colors.surface0, -- Catppuccin's subtle background
+    22	--         blend = 30,
+    23	--       },
+    24	--
+    25	--       -- Styled marks using Catppuccin's color palette
+    26	--       marks = {
+    27	--         Search = {
+    28	--           text = { "-", "=" },
+    29	--           priority = 1,
+    30	--           color = colors.peach, -- Catppuccin orange
+    31	--         },
+    32	--         Error = {
+    33	--           text = { "-", "=" },
+    34	--           priority = 2,
+    35	--           color = colors.red, -- Catppuccin red
+    36	--         },
+    37	--         Warn = {
+    38	--           text = { "-", "=" },
+    39	--           priority = 3,
+    40	--           color = colors.yellow, -- Catppuccin yellow
+    41	--         },
+    42	--         Info = {
+    43	--           text = { "-", "=" },
+    44	--           priority = 4,
+    45	--           color = colors.sky, -- Catppuccin blue
+    46	--         },
+    47	--         Hint = {
+    48	--           text = { "-", "=" },
+    49	--           priority = 5,
+    50	--           color = colors.teal, -- Catppuccin teal
+    51	--         },
+    52	--         Misc = {
+    53	--           text = { "-", "=" },
+    54	--           priority = 6,
+    55	--           color = colors.mauve, -- Catppuccin purple
+    56	--         },
+    57	--         GitAdd = {
+    58	--           text = "│",
+    59	--           priority = 3,
+    60	--           gui = nil,
+    61	--           color = nil,
+    62	--           cterm = nil,
+    63	--           color_nr = nil,
+    64	--           highlight = "GitSignsAdd",
+    65	--         },
+    66	--         GitChange = {
+    67	--           text = "│",
+    68	--           priority = 3,
+    69	--           gui = nil,
+    70	--           color = nil,
+    71	--           cterm = nil,
+    72	--           color_nr = nil,
+    73	--           highlight = "GitSignsChange",
+    74	--         },
+    75	--         GitDelete = {
+    76	--           text = "▁",
+    77	--           priority = 3,
+    78	--           gui = nil,
+    79	--           color = nil,
+    80	--           cterm = nil,
+    81	--           color_nr = nil,
+    82	--           highlight = "GitSignsDelete",
+    83	--         },
+    84	--       },
+    85	--
+    86	--       excluded_filetypes = {
+    87	--         "prompt",
+    88	--         "TelescopePrompt",
+    89	--         "noice",
+    90	--         "neo-tree",
+    91	--         "dashboard",
+    92	--         "alpha",
+    93	--         "lazy",
+    94	--         "mason",
+    95	--         "notify",
+    96	--         "toggleterm",
+    97	--         "lazyterm",
+    98	--       },
+    99	--
+   100	--       excluded_buftypes = {
+   101	--         "terminal",
+   102	--         "nofile",
+   103	--       },
+   104	--
+   105	--       handlers = {
+   106	--         cursor = true,
+   107	--         diagnostic = true,
+   108	--         gitsigns = true, -- Requires gitsigns.nvim
+   109	--         handle = true,
+   110	--         search = true, -- Requires nvim-hlslens
+   111	--       },
+   112	--     })
+   113	--
+   114	--     -- Setup search integration
+   115	--     require("scrollbar.handlers.search").setup({
+   116	--       -- Automatically hide search marks when leaving search
+   117	--       calm_down = true,
+   118	--       -- Nearest search result gets a different color
+   119	--       nearest_only = false,
+   120	--     })
+   121	--
+   122	--     -- Setup gitsigns integration
+   123	--     require("scrollbar.handlers.gitsigns").setup()
+   124	--   end,
+   125	-- }
+
+===== FILE: /Users/zcu/.config/nvim/lua/misc/checkmate.lua (     124 lines) =====
+     1	return {
+     2	  "bngarren/checkmate.nvim",
+     3	  ft = "markdown",
+     4	  opts = {
+     5	    files = { "*.md" },
+     6	    enter_insert_after_new = false,
+     7	    log = {},
+     8	    smart_toggle = {
+     9	      enabled = false,
+    10	    },
+    11	    keys = {
+    12	      ["<leader>tt"] = {
+    13	        rhs = "<cmd>Checkmate toggle<CR>",
+    14	        desc = "Toggle todo item",
+    15	        modes = { "n", "v" },
+    16	      },
+    17	      ["<leader>tc"] = {
+    18	        rhs = "<cmd>Checkmate check<CR>",
+    19	        desc = "Set todo item as checked (done)",
+    20	        modes = { "n", "v" },
+    21	      },
+    22	      ["<leader>tu"] = {
+    23	        rhs = "<cmd>Checkmate uncheck<CR>",
+    24	        desc = "Set todo item as unchecked (not done)",
+    25	        modes = { "n", "v" },
+    26	      },
+    27	      ["<leader>t="] = {
+    28	        rhs = "<cmd>Checkmate cycle_next<CR>",
+    29	        desc = "Cycle todo item(s) to the next state",
+    30	        modes = { "n", "v" },
+    31	      },
+    32	      ["<leader>t-"] = {
+    33	        rhs = "<cmd>Checkmate cycle_previous<CR>",
+    34	        desc = "Cycle todo item(s) to the previous state",
+    35	        modes = { "n", "v" },
+    36	      },
+    37	      ["<leader>tn"] = {
+    38	        rhs = "<cmd>Checkmate create<CR>",
+    39	        desc = "Create todo item",
+    40	        modes = { "n", "v" },
+    41	      },
+    42	      ["<leader>tr"] = {
+    43	        rhs = "<cmd>Checkmate remove<CR>",
+    44	        desc = "Remove todo marker (convert to text)",
+    45	        modes = { "n", "v" },
+    46	      },
+    47	      ["<leader>tR"] = {
+    48	        rhs = "<cmd>Checkmate metadata remove_all<CR>",
+    49	        desc = "Remove all metadata from a todo item",
+    50	        modes = { "n", "v" },
+    51	      },
+    52	      ["<leader>tF"] = {
+    53	        rhs = "<cmd>Checkmate select_todo<CR>",
+    54	        desc = "Open a picker to select a todo from the current buffer",
+    55	        modes = { "n" },
+    56	      },
+    57	      ["<leader>tv"] = {
+    58	        rhs = "<cmd>Checkmate metadata select_value<CR>",
+    59	        desc = "Update the value of a metadata tag under the cursor",
+    60	        modes = { "n" },
+    61	      },
+    62	
+    63	      -- Custom states
+    64	      ["<leader>tx"] = {
+    65	        rhs = "<cmd>Checkmate toggle cancelled<CR>",
+    66	        desc = "Set todo: cancelled",
+    67	        modes = { "n", "v" },
+    68	      },
+    69	      ["<leader>th"] = {
+    70	        rhs = "<cmd>Checkmate toggle on_hold<CR>",
+    71	        desc = "Set todo: on hold",
+    72	        modes = { "n", "v" },
+    73	      },
+    74	    },
+    75	    todo_states = {
+    76	      -- Built-in states (cannot change markdown or type)
+    77	      -- unchecked = { marker = "□" },
+    78	      -- checked = { marker = "✔" },
+    79	
+    80	      -- Custom states
+    81	      cancelled = {
+    82	        marker = "✗",
+    83	        markdown = "c", -- Saved as `- [c]`
+    84	        type = "complete", -- Counts as "done"
+    85	        order = 2,
+    86	      },
+    87	      on_hold = {
+    88	        marker = "⏸",
+    89	        markdown = "/", -- Saved as `- [/]`
+    90	        type = "inactive", -- Ignored in counts
+    91	        order = 100,
+    92	      },
+    93	    },
+    94	    style = {
+    95	      -- Cancelled: dim red item, nested content dimmed like completed
+    96	      CheckmateCancelledMarker = { fg = "#cc6666", bold = true },
+    97	      CheckmateCancelledMainContent = { fg = "#cc6666", strikethrough = true },
+    98	      CheckmateCancelledAdditionalContent = { link = "CheckmateCheckedAdditionalContent" },
+    99	
+   100	      -- On-hold: pastel yellow item, nested content dimmed like completed
+   101	      CheckmateOnHoldMarker = { fg = "#f9e2af", bold = true },
+   102	      CheckmateOnHoldMainContent = { fg = "#f9e2af" },
+   103	      CheckmateOnHoldAdditionalContent = { link = "CheckmateCheckedAdditionalContent" },
+   104	    },
+   105	    metadata = {
+   106	      -- Example: A @done tag that also sets the todo item state when it is added and removed
+   107	      done = {
+   108	        aliases = { "completed", "finished" },
+   109	        style = { fg = "#96de7a" },
+   110	        get_value = function()
+   111	          return tostring(os.date("%m/%d/%y"))
+   112	        end,
+   113	        key = "<leader>td",
+   114	        on_add = function(todo)
+   115	          require("checkmate").set_todo_state(todo, "checked")
+   116	        end,
+   117	        on_remove = function(todo)
+   118	          require("checkmate").set_todo_state(todo, "unchecked")
+   119	        end,
+   120	        sort_order = 30,
+   121	      },
+   122	    },
+   123	  },
+   124	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/misc/disabled.lua (      21 lines) =====
+     1	return {
+     2	  {
+     3	    -- "folke/tokyonight.nvim",
+     4	    -- enabled = false,
+     5	  },
+     6	
+     7	  {
+     8	    "nvim-neo-tree/neo-tree.nvim",
+     9	    enabled = false,
+    10	  },
+    11	
+    12	  -- {
+    13	  --   "nvimdev/dashboard-nvim",
+    14	  --   enabled = false,
+    15	  -- },
+    16	
+    17	  -- {
+    18	  --   "folke/persistence.nvim",
+    19	  --   enabled = false,
+    20	  -- },
+    21	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/misc/flash.lua (      11 lines) =====
+     1	return {
+     2	  "folke/flash.nvim",
+     3	  event = "VeryLazy",
+     4	  vscode = true,
+     5	  ---@type Flash.Config
+     6	  opts = {},
+     7	  -- stylua: ignore
+     8	  keys = {
+     9	    {"S", false},
+    10	  },
+    11	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/misc/gitsigns.lua (      17 lines) =====
+     1	return {
+     2	  {
+     3	    "lewis6991/gitsigns.nvim",
+     4	    opts = function(_, opts)
+     5	      local orig_on_attach = opts.on_attach
+     6	      opts.on_attach = function(bufnr)
+     7	        -- Disable GitSigns for markdown files
+     8	        if vim.bo[bufnr].filetype == "markdown" then
+     9	          return false
+    10	        end
+    11	        if orig_on_attach then
+    12	          orig_on_attach(bufnr)
+    13	        end
+    14	      end
+    15	    end,
+    16	  },
+    17	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/misc/mini-comment.lua (      26 lines) =====
+     1	return {
+     2	  {
+     3	    "nvim-mini/mini.comment",
+     4	    event = "VeryLazy",
+     5	    opts = {
+     6	      options = {
+     7	        custom_commentstring = function()
+     8	          return vim.bo.commentstring
+     9	        end,
+    10	      },
+    11	      vim.api.nvim_create_autocmd("FileType", {
+    12	        pattern = { "c", "cpp", "h", "hpp" },
+    13	        callback = function()
+    14	          -- Directly setting for C++ files
+    15	          vim.bo.commentstring = "// %s"
+    16	        end,
+    17	      }),
+    18	      vim.api.nvim_create_autocmd("BufEnter", {
+    19	        callback = function()
+    20	          vim.opt.formatoptions:remove({ "c", "r", "o" })
+    21	        end,
+    22	        desc = "Disable New Line Comment",
+    23	      }),
+    24	    },
+    25	  },
+    26	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/misc/mini-surround.lua (      12 lines) =====
+     1	return {
+     2	  {
+     3	    "nvim-mini/mini.surround",
+     4	    opts = {
+     5	      custom_surroundings = {
+     6	        ["("] = { output = { left = "(", right = ")" } },
+     7	        ["["] = { output = { left = "[", right = "]" } },
+     8	        ["{"] = { output = { left = "{", right = "}" } },
+     9	      },
+    10	    },
+    11	  },
+    12	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/misc/multicursor.lua (      73 lines) =====
+     1	return {
+     2	  "jake-stewart/multicursor.nvim",
+     3	  branch = "1.0",
+     4	  config = function()
+     5	    local mc = require("multicursor-nvim")
+     6	    mc.setup()
+     7	
+     8	    local set = vim.keymap.set
+     9	
+    10	    -- Add or delete cursor
+    11	    -- set({ "n", "x" }, "<leader>za", function()
+    12	    --   mc.addCursor()
+    13	    -- end)
+    14	    -- set({ "n", "x" }, "<leader>zd", function()
+    15	    --   mc.deleteCursor()
+    16	    -- end)
+    17	
+    18	    -- Add or skip adding a new cursor by matching word/selection
+    19	    set({ "n", "x" }, "<leader>zn", function()
+    20	      mc.matchAddCursor(1)
+    21	    end)
+    22	    set({ "n", "x" }, "<leader>zs", function()
+    23	      mc.matchSkipCursor(1)
+    24	    end)
+    25	    set({ "n", "x" }, "<leader>zN", function()
+    26	      mc.matchAddCursor(-1)
+    27	    end)
+    28	    set({ "n", "x" }, "<leader>zS", function()
+    29	      mc.matchSkipCursor(-1)
+    30	    end)
+    31	
+    32	    -- bring back cursors if you accidentally clear them
+    33	    set("n", "<leader>zr", mc.restoreCursors)
+    34	
+    35	    -- Add and remove cursors with control + left click.
+    36	    set("n", "<c-leftmouse>", mc.handleMouse)
+    37	    set("n", "<c-leftdrag>", mc.handleMouseDrag)
+    38	    set("n", "<c-leftrelease>", mc.handleMouseRelease)
+    39	
+    40	    -- Disable and enable cursors.
+    41	    set({ "n", "x" }, "<c-q>", mc.toggleCursor)
+    42	
+    43	    -- Mappings defined in a keymap layer only apply when there are
+    44	    -- multiple cursors. This lets you have overlapping mappings.
+    45	    mc.addKeymapLayer(function(layerSet)
+    46	      -- Select a different cursor as the main one.
+    47	      -- layerSet({ "n", "x" }, "<left>", mc.prevCursor)
+    48	      -- layerSet({ "n", "x" }, "<right>", mc.nextCursor)
+    49	
+    50	      -- Delete the main cursor.
+    51	      -- layerSet({ "n", "x" }, "<leader>x", mc.deleteCursor)
+    52	
+    53	      -- Enable and clear cursors using escape.
+    54	      layerSet("n", "<esc>", function()
+    55	        if not mc.cursorsEnabled() then
+    56	          mc.enableCursors()
+    57	        else
+    58	          mc.clearCursors()
+    59	        end
+    60	      end)
+    61	    end)
+    62	
+    63	    -- Customize how cursors look.
+    64	    local hl = vim.api.nvim_set_hl
+    65	    hl(0, "MultiCursorCursor", { reverse = true })
+    66	    hl(0, "MultiCursorVisual", { link = "Visual" })
+    67	    hl(0, "MultiCursorSign", { link = "SignColumn" })
+    68	    hl(0, "MultiCursorMatchPreview", { link = "Search" })
+    69	    hl(0, "MultiCursorDisabledCursor", { reverse = true })
+    70	    hl(0, "MultiCursorDisabledVisual", { link = "Visual" })
+    71	    hl(0, "MultiCursorDisabledSign", { link = "SignColumn" })
+    72	  end,
+    73	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/misc/nvim-spider.lua (      26 lines) =====
+     1	return {
+     2	  {
+     3	    "chrisgrieser/nvim-spider",
+     4	    opts = {
+     5	      skipInsignificantPunctuation = false,
+     6	      consistentOperatorPending = true,
+     7	    },
+     8	    keys = {
+     9	      {
+    10	        "w",
+    11	        "<cmd>lua require('spider').motion('w')<CR>",
+    12	        mode = { "n", "o", "x" },
+    13	      },
+    14	      {
+    15	        "b",
+    16	        "<cmd>lua require('spider').motion('b')<CR>",
+    17	        mode = { "n", "o", "x" },
+    18	      },
+    19	      {
+    20	        "e",
+    21	        "<cmd>lua require('spider').motion('e')<CR>",
+    22	        mode = { "n", "o", "x" },
+    23	      },
+    24	    },
+    25	  },
+    26	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/misc/treesitter-context.lua (       9 lines) =====
+     1	return {
+     2	  "nvim-treesitter/nvim-treesitter-context",
+     3	  enabled = true,
+     4	  opts = {
+     5	    max_lines = 3,       -- max lines the context window can show
+     6	    trim_scope = "outer", -- which context lines to discard: "inner" or "outer"
+     7	    mode = "cursor",     -- "cursor" = show context for cursor position
+     8	  },
+     9	}
+
+===== FILE: /Users/zcu/.config/nvim/lua/misc/vim-sleuth.lua (       3 lines) =====
+     1	return {
+     2	  { "tpope/vim-sleuth", event = { "BufReadPre", "BufNewFile" } },
+     3	}
+
+===== FILE: /Users/zcu/.config/nvim/lazyvim.json (      23 lines) =====
+     1	{
+     2	  "extras": [
+     3	    "lazyvim.plugins.extras.coding.mini-comment",
+     4	    "lazyvim.plugins.extras.coding.mini-surround",
+     5	    "lazyvim.plugins.extras.editor.fzf",
+     6	    "lazyvim.plugins.extras.editor.inc-rename",
+     7	    "lazyvim.plugins.extras.lang.angular",
+     8	    "lazyvim.plugins.extras.lang.clangd",
+     9	    "lazyvim.plugins.extras.lang.json",
+    10	    "lazyvim.plugins.extras.lang.markdown",
+    11	    "lazyvim.plugins.extras.lang.php",
+    12	    "lazyvim.plugins.extras.lang.rust",
+    13	    "lazyvim.plugins.extras.lang.tailwind",
+    14	    "lazyvim.plugins.extras.lang.typescript",
+    15	    "lazyvim.plugins.extras.lang.yaml",
+    16	    "lazyvim.plugins.extras.util.dot",
+    17	    "lazyvim.plugins.extras.util.mini-hipatterns"
+    18	  ],
+    19	  "install_version": 8,
+    20	  "news": {
+    21	    "NEWS.md": "11866"
+    22	  },
+    23	  "version": 8
+    24	}
+===== FILE: /Users/zcu/.config/nvim/.neoconf.json (      15 lines) =====
+     1	{
+     2	  "neodev": {
+     3	    "library": {
+     4	      "enabled": true,
+     5	      "plugins": true
+     6	    }
+     7	  },
+     8	  "neoconf": {
+     9	    "plugins": {
+    10	      "lua_ls": {
+    11	        "enabled": true
+    12	      }
+    13	    }
+    14	  }
+    15	}
+
+===== FILE: /Users/zcu/.config/nvim/.gitignore (       9 lines) =====
+     1	tt.*
+     2	.tests
+     3	doc/tags
+     4	debug
+     5	.repro
+     6	foo.*
+     7	*.log
+     8	data
+     9	.gitnexus
+
+===== FILE: /Users/zcu/.config/nvim/stylua.toml (       2 lines) =====
+     1	indent_type = "Spaces"
+     2	indent_width = 2
+     3	column_width = 120
